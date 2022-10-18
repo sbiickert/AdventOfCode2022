@@ -71,6 +71,7 @@ Var
 	l: TStringList;
 	i: Integer;
 Begin
+	// https://wiki.freepascal.org/TStringList-TStrings_Tutorial
 	l := TStringList.Create;
 	l.Add('First string');
 	l.Add('Second string');

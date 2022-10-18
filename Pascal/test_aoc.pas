@@ -1,7 +1,7 @@
 Program AocTest;
 
 Uses
-    AoCUtils, AoCSpatialUtils;
+    AoCUtils, AoCSpatialUtils, Classes;
 
 Const
     IN_FILE = '../Input/day00_test.txt';
@@ -59,39 +59,46 @@ End;
 
 Procedure TestInputParsing();
 Var
-    input: AoCStringArray;
-    ginput: AoCGStringArray;
+    input: TStringList;
+    gInput: AoCStringListGroup;
     i, j: Integer;
 Begin
     // Testing Input Parsing
     input := ReadInput(IN_FILE);
-    For i := 0 To Length(input)-1 Do
-        Begin
-            WriteLn(input[i]);
-        End;
+    For i := 0 To input.Count-1 Do
+	Begin
+		WriteLn(input[i]);
+	End;
 
-    ginput := ReadGroupedInput(IN_FILE);
-    WriteLn(Length(ginput));
-    WriteLn(ginput[0][0]);
-    For i := 0 To Length(ginput)-1 Do
-        Begin
-            WriteLn('Group ', i);
-            input := ginput[i];
-            For j := 0 To Length(input)-1 Do
-                Begin
-                    WriteLn(input[j]);
-                End;
-        End;
+    gInput := ReadGroupedInput(IN_FILE);
+    WriteLn(Length(gInput));
+    For i := 0 To Length(gInput)-1 Do
+	Begin
+		WriteLn('Group ', i);
+		input := gInput[i];
+		For j := 0 To input.Count-1 Do
+		Begin
+			WriteLn(input[j]);
+		End;
+	End;
 End;
 
 Procedure TestUtil;
 Var
-	sList: AoCStringArray;
-	iList: AoCIntArray;
+	sArr: AoCStringArray;
+	iArr: AoCIntArray;
+	sList: TStringList;
 Begin
-	sList := ['1', '2', '3'];
-	iList := StrArrayToIntArray(sList);
-	WriteLn('The sum is ', SumIntArray(iList));
+	sArr := ['1', '2', '3'];
+	iArr := StrArrayToIntArray(sArr);
+	WriteLn('The sum is ', SumIntArray(iArr));
+	
+	sList := TStringList.Create;
+	sList.Delimiter := ',';
+	sList.DelimitedText := '4,5,6';
+	iArr := StrListToIntArray(sList);
+	WriteLn('The sum is ', SumIntArray(iArr));
+	sList.Free;
 End;
 
 Begin

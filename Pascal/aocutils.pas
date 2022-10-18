@@ -6,71 +6,74 @@ Unit aocutils;
 
 Interface
 
-Uses SysUtils, StrUtils, fgl;
+Uses SysUtils, StrUtils, fgl, Classes;
 
 
 Type
-    AoCStringArray =   array Of String;
-    AoCGStringArray =  array Of AoCStringArray;
-    AoCIntArray =      array of Integer;
-    AoCStringMap =     specialize TFPGMap<String, String>;
+    AoCStringArray =     array Of String;
+    AoCIntArray =        array of Integer;
+    AoCStringListGroup = array of TStringList;
+    AoCStringMap =       specialize TFPGMap<String, String>;
 
-Function ReadInput(inputFilename: String):   AoCStringArray;
-Function ReadGroupedInput(inputFilename: String):   AoCGStringArray;
+Function ReadInput(inputFilename: String):   TStringList;
+Function ReadGroupedInput(inputFilename: String):   AoCStringListGroup;
+
+Function StrListToIntArray(input: TStringList): AoCIntArray;
 Function StrArrayToIntArray(var input: AoCStringArray): AoCIntArray;
 Function SumIntArray(var input: AoCIntArray): Integer;
 
 
 Implementation
 
-Function ReadInput(inputFilename: String):   AoCStringArray;
-
-Var
-    gString:   AoCGStringArray;
+Function ReadInput(inputFilename: String): TStringList;
 Begin
-    gString := ReadGroupedInput(inputFilename);
-    result := gString[0];
+    WriteLn('Will read data from: ', inputFilename);
+	result := TStringList.Create;
+    result.LoadFromFile(inputFilename);
 End;
 
-Function ReadGroupedInput(inputFilename: String):   AoCGStringArray;
-
+Function ReadGroupedInput(inputFilename: String): AoCStringListGroup;
 Var
-    inputFile:   TextFile;
-    line:   String;
-    group:   AoCStringArray;
+    allInput, group: TStringList;
+    i: Integer;
 Begin
 	result := [];
-    WriteLn('Will read data from: ', inputFilename);
-    Assign(inputFile, inputFilename);
-    Reset(inputFile);
     SetLength(result, 0);
-    SetLength(group, 0);
+    
+    allInput := ReadInput(inputFilename);
+    group := TStringList.Create;
+    
+	For i := 0 To allInput.Count-1 Do
+	Begin
+		If Length(allInput[i]) = 0 Then
+		Begin
+			SetLength(result, Length(result)+1);
+			result[Length(result)-1] := group;
+			group := TStringList.Create;
+			continue;
+		End;
+		group.Add(allInput[i]);
+	End;
 
-    // Make sure the ANSI string compiler flag is on, or will trunc at 255!
-    While Not Eof(inputFile) Do
-        Begin
-            ReadLn(inputFile, line);
-            If Length(line) = 0 Then
-                Begin
-                    SetLength(result, Length(result)+1);
-                    result[Length(result)-1] := group;
-                    SetLength(group, 0);
-                    continue;
-                End;
-            SetLength(group, Length(group)+1);
-            group[Length(group)-1] := line;
-        End;
-
-    If Length(group) > 0 Then
-        Begin
-            SetLength(result, Length(result)+1);
-            result[Length(result)-1] := group;
-        End;
-
-    Close(inputFile);
+	If group.Count > 0 Then
+	Begin
+		SetLength(result, Length(result)+1);
+		result[Length(result)-1] := group;
+	End;
 End;
 
-{ Utility function to transform an array of strings to ints }
+{ Utility function to transform an list of strings to array of ints }
+Function StrListToIntArray(input: TStringList): AoCIntArray;
+Var
+	i: Integer;
+Begin
+	result := [];
+	SetLength(result, input.Count);
+	For i := 0 To input.Count-1 Do
+		result[i] := StrToInt(input[i]);
+End;
+
+{ Utility function to transform an array of strings to array of ints }
 Function StrArrayToIntArray(var input: AoCStringArray): AoCIntArray;
 Var
     i: Integer;
@@ -78,9 +81,7 @@ Begin
 	result := [];
     SetLength(result, Length(input));
     For i := 0 To Length(input)-1 Do
-    Begin
         result[i] := StrToInt(input[i]);
-    End;
 End;
 
 Function SumIntArray(var input: AoCIntArray): Integer;

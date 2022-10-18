@@ -90,11 +90,11 @@ End;
 
 Constructor Coord2D.Create(key: String);
 Var
-	words: TStringArray;
+	numbers: TStringArray;
 Begin
-    words := SplitString(key, '|');
-    _x := StrToInt(words[0]);
-    _y := StrToInt(words[1]);
+    numbers := SplitString(key, '|');
+    _x := StrToInt(numbers[0]);
+    _y := StrToInt(numbers[1]);
 End;
 
 Procedure Coord2D.SetX(val: Integer);
@@ -173,12 +173,12 @@ End;
 
 Constructor Coord3D.Create(key: String);
 Var
-	words: TStringArray;
+	numbers: TStringArray;
 Begin
-    words := SplitString(key, '|');
-    _x := StrToInt(words[0]);
-    _y := StrToInt(words[1]);
-    _z := StrToInt(words[2]);
+    numbers := SplitString(key, '|');
+    _x := StrToInt(numbers[0]);
+    _y := StrToInt(numbers[1]);
+    _z := StrToInt(numbers[2]);
 End;
 
 Procedure Coord3D.SetZ(val: Integer);
