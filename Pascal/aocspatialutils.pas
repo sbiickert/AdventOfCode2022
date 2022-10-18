@@ -14,17 +14,28 @@ Type
             _x, _y:   Integer;
         Public
             Constructor Create(x, y: Integer);
-            Constructor Create(key: String);
+            Constructor Create(key: String); Virtual;
             Function GetX(): Integer;
             Function GetY(): Integer;
             Function IsEqualTo(other: Coord2D): Boolean;
             Function DeltaTo(other: Coord2D): Coord2D;
             Function DistanceTo(other: Coord2D): Double;
             Function MDistanceTo(other: Coord2D): Integer;
-            Procedure Print();
-            Function AsKey(): String;
+            Procedure Print(); Virtual;
+            Function AsKey(): String; Virtual;
     End;
     Coord2DArray =   array Of Coord2D;
+    
+    Coord3D = class(Coord2D)
+    	Private
+    		_z: Integer;
+    	Public
+            Constructor Create(x, y, z: Integer);
+            Constructor Create(key: String); Override;
+            Function GetZ(): Integer;
+            Procedure Print(); Override;
+            Function AsKey(): String; Override;
+    End;
     
     Extent2D = Class
     	Private
@@ -143,6 +154,41 @@ Begin
 	SetLength(arr, len);
 	arr[len-1] := coord;
 End;
+
+
+Constructor Coord3D.Create(x, y, z: Integer);
+Begin
+    _x := x;
+    _y := y;
+    _z := z;
+End;
+
+Constructor Coord3D.Create(key: String);
+Var
+	words: TStringArray;
+Begin
+    words := SplitString(key, '|');
+    _x := StrToInt(words[0]);
+    _y := StrToInt(words[1]);
+    _z := StrToInt(words[2]);
+End;
+
+Function Coord3D.GetZ(): Integer;
+Begin
+	result := _z
+End;
+
+Procedure Coord3D.Print(); 
+Begin
+    WriteLn('Coord3D(', _x, ',', _y, ',', _z, ')');
+End;
+
+Function Coord3D.AsKey(): String;
+Begin
+	result := IntToStr(GetX) + '|' + IntToStr(GetY) + '|' + IntToStr(GetZ);
+End;
+
+
 
 // -------------------------------------------------------
 // Extent2D

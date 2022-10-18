@@ -14,6 +14,8 @@ Var
     ext: Extent2D;
 	grid: Grid2D;
 	neighbours: Coord2DArray;
+	c3: Coord3D;
+	key: String;
 Begin
     // Testing Spatial Functions
     c1 := Coord2D.Create(0, 0);
@@ -44,6 +46,14 @@ Begin
     	neighbours[i].Print;
     End;
     grid.Print;
+
+	c3 := Coord3D.create(1,2,3);
+	c3.Print;
+	key := c3.AsKey;
+	WriteLn(key);
+	key := '20|30|35';
+	c3 := Coord3D.Create(key);
+	c3.Print;
 
     // Testing Input Parsing
     input := ReadInput(IN_FILE);
