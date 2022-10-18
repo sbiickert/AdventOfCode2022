@@ -12,11 +12,13 @@ Type
 	Coord2D = Class
         Private
             _x, _y:   Integer;
+            Procedure SetX(val: Integer);
+            Procedure SetY(val: Integer);
         Public
-            Constructor Create(x, y: Integer);
+            Constructor Create(ix, iy: Integer);
             Constructor Create(key: String); Virtual;
-            Function GetX(): Integer;
-            Function GetY(): Integer;
+            Property X: Integer Read _x Write SetX;
+            Property Y: Integer Read _y Write SetY;
             Function IsEqualTo(other: Coord2D): Boolean;
             Function DeltaTo(other: Coord2D): Coord2D;
             Function DistanceTo(other: Coord2D): Double;
@@ -29,13 +31,15 @@ Type
     Coord3D = class(Coord2D)
     	Private
     		_z: Integer;
+            Procedure SetZ(val: Integer);
     	Public
-            Constructor Create(x, y, z: Integer);
+            Constructor Create(ix, iy, iz: Integer);
             Constructor Create(key: String); Override;
-            Function GetZ(): Integer;
+            Property Z: Integer Read _z Write SetZ;
             Procedure Print(); Override;
             Function AsKey(): String; Override;
     End;
+    Coord3DArray = array of Coord2D;
     
     Extent2D = Class
     	Private
@@ -78,10 +82,10 @@ Implementation
 // Coord2D
 // -------------------------------------------------------
 
-Constructor Coord2D.Create(x, y: Integer);
+Constructor Coord2D.Create(ix, iy: Integer);
 Begin
-    _x := x;
-    _y := y;
+    _x := ix;
+    _y := iy;
 End;
 
 Constructor Coord2D.Create(key: String);
@@ -93,19 +97,19 @@ Begin
     _y := StrToInt(words[1]);
 End;
 
-Function Coord2D.GetX(): Integer;
+Procedure Coord2D.SetX(val: Integer);
 Begin
-    result := _x;
+    _x := val;
 End;
 
-Function Coord2D.GetY(): Integer;
+Procedure Coord2D.SetY(val: Integer);
 Begin
-    result := _y;
+    _y := val;
 End;
 
 Function Coord2D.IsEqualTo(other: Coord2D):   Boolean;
 Begin
-    If (GetX = other.GetX) And (GetY = other.GetY) Then
+    If (X = other.X) And (Y = other.Y) Then
         result := true
     Else
         result := false;
@@ -113,7 +117,7 @@ End;
 
 Function Coord2D.DeltaTo(other: Coord2D): Coord2D;
 Begin
-    result := Coord2D.Create(other.GetX - GetX, other.GetY - GetY);
+    result := Coord2D.Create(other.X - X, other.Y - Y);
 End;
 
 Function Coord2D.DistanceTo(other: Coord2D): Double;
@@ -121,7 +125,7 @@ Var
     delta: Coord2D;
 Begin
     delta := DeltaTo(other);
-    result := Sqrt(Sqr(delta.GetX) + Sqr(delta.GetY));
+    result := Sqrt(Sqr(delta.X) + Sqr(delta.Y));
 End;
 
 Function Coord2D.MDistanceTo(other: Coord2D): Integer;
@@ -129,7 +133,7 @@ Var
     delta: Coord2D;
 Begin
     delta := DeltaTo(other);
-    result := Abs(delta.GetX) + Abs(delta.GetY);
+    result := Abs(delta.X) + Abs(delta.Y);
 End;
 
 Procedure Coord2D.Print;
@@ -139,7 +143,7 @@ End;
 
 Function Coord2D.AsKey(): String;
 Begin
-	result := IntToStr(GetX) + '|' + IntToStr(GetY);
+	result := IntToStr(X) + '|' + IntToStr(Y);
 End;
 
 // -------------------------------------------------------
@@ -156,11 +160,15 @@ Begin
 End;
 
 
-Constructor Coord3D.Create(x, y, z: Integer);
+// -------------------------------------------------------
+// Coord3D
+// -------------------------------------------------------
+
+Constructor Coord3D.Create(ix, iy, iz: Integer);
 Begin
-    _x := x;
-    _y := y;
-    _z := z;
+    _x := ix;
+    _y := iy;
+    _z := iz;
 End;
 
 Constructor Coord3D.Create(key: String);
@@ -173,9 +181,9 @@ Begin
     _z := StrToInt(words[2]);
 End;
 
-Function Coord3D.GetZ(): Integer;
+Procedure Coord3D.SetZ(val: Integer);
 Begin
-	result := _z
+    _z := val;
 End;
 
 Procedure Coord3D.Print(); 
@@ -185,9 +193,21 @@ End;
 
 Function Coord3D.AsKey(): String;
 Begin
-	result := IntToStr(GetX) + '|' + IntToStr(GetY) + '|' + IntToStr(GetZ);
+	result := IntToStr(X) + '|' + IntToStr(Y) + '|' + IntToStr(Z);
 End;
 
+// -------------------------------------------------------
+// Coord3D Utility Functions
+// -------------------------------------------------------
+
+Procedure PushCoord(coord: Coord3D; var arr: Coord3DArray);
+Var
+	len: Integer;
+Begin
+	len := Length(arr)+1;
+	SetLength(arr, len);
+	arr[len-1] := coord;
+End;
 
 
 // -------------------------------------------------------
@@ -199,16 +219,16 @@ Var
 	xmin, xmax, ymin, ymax: Integer;
 	i: Integer;
 Begin
-	xmin := coords[0].GetX;
-	xmax := coords[0].GetX;
-	ymin := coords[0].GetY;
-	ymax := coords[0].GetY;
+	xmin := coords[0].X;
+	xmax := coords[0].X;
+	ymin := coords[0].Y;
+	ymax := coords[0].Y;
 	for i := 1 to Length(coords)-1 do
 	Begin
-		xmin := Min(xmin, coords[i].GetX);
-		xmax := Max(xmax, coords[i].GetX);
-		ymin := Min(ymin, coords[i].GetY);
-		ymax := Max(ymax, coords[i].GetY);
+		xmin := Min(xmin, coords[i].X);
+		xmax := Max(xmax, coords[i].X);
+		ymin := Min(ymin, coords[i].Y);
+		ymax := Max(ymax, coords[i].Y);
 	End;
 	_min := Coord2D.Create(xmin, ymin);
 	_max := Coord2D.Create(xmax, ymax);
@@ -226,12 +246,12 @@ End;
 
 Function Extent2D.GetWidth(): Integer;
 Begin
-	result := _max.GetX - _min.GetX;
+	result := _max.X - _min.X;
 End;
 
 Function Extent2D.GetHeight(): Integer;
 Begin
-	result := _max.GetY - _min.GetY;
+	result := _max.Y - _min.Y;
 End;
 
 Function Extent2D.GetArea(): Integer;
@@ -241,10 +261,10 @@ End;
 
 Function Extent2D.Contains(coord: Coord2D): Boolean;
 Begin
-	result := (GetMin.GetX <= coord.GetX)
-		and (coord.GetX <= GetMax.GetX)
-		and (GetMin.GetY <= coord.GetY)
-		and (coord.GetY <= GetMax.GetY);
+	result := (GetMin.X <= coord.X)
+		and (coord.X <= GetMax.X)
+		and (GetMin.Y <= coord.Y)
+		and (coord.Y <= GetMax.Y);
 End;
 
 Procedure Extent2D.Print();
@@ -356,7 +376,7 @@ Begin
 	For i := 0 To Length(offsets)-1 Do
 	Begin
 		c := offsets[i];
-		PushCoord(Coord2D.Create(fromCoord.GetX+c.GetX, fromCoord.GetY+c.GetY), result);
+		PushCoord(Coord2D.Create(fromCoord.X+c.X, fromCoord.Y+c.Y), result);
 	End;
 End;
 
@@ -366,9 +386,9 @@ Var
 	ext: Extent2D;
 Begin
 	ext := GetExtent;
-	For r := ext.GetMin.GetY To ext.GetMax.GetY Do
+	For r := ext.GetMin.Y To ext.GetMax.Y Do
 	Begin
-		For c := ext.GetMin.GetX To ext.GetMax.GetX Do
+		For c := ext.GetMin.X To ext.GetMax.X Do
 		Begin
 			Write(GetValue(Coord2D.Create(c, r)));
 		End;

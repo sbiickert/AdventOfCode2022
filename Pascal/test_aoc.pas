@@ -6,16 +6,15 @@ Uses
 Const
     IN_FILE = '../Input/day00_test.txt';
 
+Procedure TestSpatial();
 Var
     c1, c2: Coord2D;
-    input: AoCStringArray;
-    ginput: AoCGStringArray;
-    i, j: Integer;
     ext: Extent2D;
 	grid: Grid2D;
 	neighbours: Coord2DArray;
 	c3: Coord3D;
 	key: String;
+	i: Integer;
 Begin
     // Testing Spatial Functions
     c1 := Coord2D.Create(0, 0);
@@ -54,7 +53,16 @@ Begin
 	key := '20|30|35';
 	c3 := Coord3D.Create(key);
 	c3.Print;
+	c3.Z := 40;
+	c3.Print;
+End;
 
+Procedure TestInputParsing();
+Var
+    input: AoCStringArray;
+    ginput: AoCGStringArray;
+    i, j: Integer;
+Begin
     // Testing Input Parsing
     input := ReadInput(IN_FILE);
     For i := 0 To Length(input)-1 Do
@@ -74,4 +82,20 @@ Begin
                     WriteLn(input[j]);
                 End;
         End;
+End;
+
+Procedure TestUtil;
+Var
+	sList: AoCStringArray;
+	iList: AoCIntArray;
+Begin
+	sList := ['1', '2', '3'];
+	iList := StrArrayToIntArray(sList);
+	WriteLn('The sum is ', SumIntArray(iList));
+End;
+
+Begin
+	TestSpatial;
+	TestInputParsing;
+	TestUtil;
 End.

@@ -17,6 +17,9 @@ Type
 
 Function ReadInput(inputFilename: String):   AoCStringArray;
 Function ReadGroupedInput(inputFilename: String):   AoCGStringArray;
+Function StrArrayToIntArray(var input: AoCStringArray): AoCIntArray;
+Function SumIntArray(var input: AoCIntArray): Integer;
+
 
 Implementation
 
@@ -78,6 +81,15 @@ Begin
     Begin
         result[i] := StrToInt(input[i]);
     End;
+End;
+
+Function SumIntArray(var input: AoCIntArray): Integer;
+Var
+	i: Integer;
+Begin
+	result := 0;
+	For i := 0 To Length(input)-1 Do
+		result := result + input[i];
 End;
 
 End.
