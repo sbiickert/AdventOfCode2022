@@ -1,9 +1,10 @@
 program StringTesting;
 
 uses
-    StrUtils, SysUtils, RegExpr;
+    StrUtils, SysUtils, RegExpr, Classes;
 
-var
+Procedure TestParsing();
+Var
     testString: String;
     x: String;
     whitespace: SysUtils.TSysCharSet;
@@ -11,8 +12,7 @@ var
     i: Integer;
     wc: Integer;
     word: String;
-    re: TRegExpr;
-begin
+Begin
     testString := 'I wish I were an Oscar Meyer wiener.';
     WriteLn(testString);
     WriteLn(StartsStr('I', testString));
@@ -40,6 +40,14 @@ begin
     WriteLn('SplitString: ', Length(words));
     WriteLn('SplitString: ', words[3]);
     WriteLn('The second letter is ', words[3][2]); 
+End;
+
+Procedure TestRegex();
+Var
+    re: TRegExpr;
+    testString: String;	
+Begin
+    testString := 'One,two,three,four five';
     
     // https://regex.sorokin.engineer/en/latest/tregexpr.html
     re := TRegExpr.Create(',\w+ \w+');
@@ -56,4 +64,26 @@ begin
 		End;
     End;
     re.Free;
+End;
+
+Procedure TestList();
+Var
+	l: TStringList;
+	i: Integer;
+Begin
+	l := TStringList.Create;
+	l.Add('First string');
+	l.Add('Second string');
+	l.Add('Third string');
+	
+	For i := 0 To l.Count-1 Do
+		WriteLn(l[i]);
+		
+	l.Free;
+End;
+
+begin
+    TestParsing;
+    TestRegex;
+    TestList;
 end.
