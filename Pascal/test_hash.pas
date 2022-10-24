@@ -9,6 +9,7 @@ type
         a: String;
         b: Integer;
     end;
+    TStringPtr = ^String;
 
 var
     x: TMap;
@@ -17,6 +18,7 @@ var
     ptr: Pointer;
     val: Integer;
     strval: String;
+    strptr: TStringPtr;
     idx: Integer;
     rec: SBRec;
 begin
@@ -27,13 +29,13 @@ begin
     WriteLn(x['one']);
     For i := 0 to x.Count-1 do
     	WriteLn(x.Keys[i]);
-    i := x.IndexOf('three'); # -1
+    i := x.IndexOf('three'); // -1
     WriteLn(IntToStr(i));
     
     x.Free;
 
     // High performance
-{
+
     hlist := TFPHashList.Create;
     val := 1;
     ptr := @val;
@@ -42,10 +44,13 @@ begin
     WriteLn(PInteger(hlist[idx])^);
 
     strval := 'bob';
-    ptr := @strval;
-    hlist.Add('two', ptr);
+    strptr := @strval;
+    WriteLn('strval is ', strval);
+    WriteLn('ptr points to ', strptr^);
+    hlist.Add('two', strptr);
     idx := hlist.FindIndexOf('two');
-    WriteLn(PString(hlist[idx])^);
+    strptr := hlist[idx];
+    WriteLn(strptr^);
 
     rec.a := 'sam';
     rec.b := 42;
@@ -56,5 +61,5 @@ begin
     WriteLn(rec.a);
 
     hlist.Free;
-}
+
 end.

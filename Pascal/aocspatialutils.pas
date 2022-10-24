@@ -6,7 +6,7 @@ Unit aocspatialutils;
 
 Interface
 
-Uses SysUtils, StrUtils, Math, AoCUtils;
+Uses SysUtils, StrUtils, Math, AoCUtils, ContNrs;
 
 Type
 	Coord2D = Class
@@ -52,22 +52,25 @@ Type
     		Function GetHeight(): Integer;
     		Function GetArea(): Integer;
     		Function Contains(coord: Coord2D): Boolean;
+    		Function AllContainedCoords(): Coord2DArray;
     		Procedure Print();
     End;
     
     Direction = (up, down, left, right);
     MapDirection = (n, s, e, w);
     Adjacency = (rook, bishop, queen);
+    AoCStrPtr = ^String;
     
     Grid2D = Class
     	Private
     		_defaultValue: String;
     		_aRule: Adjacency;
-    		_data: AoCStringMap;
+    		_data: TFPHashList;
+    		_addedValues: AoCStringArray;
     	Public
     		Constructor Create(default: String; adjacency: Adjacency = rook);
     		Function GetValue(coord: Coord2D): String;
-    		Function SetValue(v: String; coord: Coord2D): String;
+    		Procedure SetValue(v: String; coord: Coord2D);
     		Function GetExtent(): Extent2D;
     		Function GetCoords(): Coord2DArray;
     		Function GetCoords(withValue: String): Coord2DArray;
@@ -246,12 +249,12 @@ End;
 
 Function Extent2D.GetWidth(): Integer;
 Begin
-	result := _max.X - _min.X;
+	result := _max.X - _min.X + 1;
 End;
 
 Function Extent2D.GetHeight(): Integer;
 Begin
-	result := _max.Y - _min.Y;
+	result := _max.Y - _min.Y + 1;
 End;
 
 Function Extent2D.GetArea(): Integer;
@@ -265,6 +268,22 @@ Begin
 		and (coord.X <= GetMax.X)
 		and (GetMin.Y <= coord.Y)
 		and (coord.Y <= GetMax.Y);
+End;
+
+Function Extent2D.AllContainedCoords(): Coord2DArray;
+Var
+	i, x, y: Integer;
+Begin
+	result := [];
+	SetLength(result, GetArea);
+	i := 0;
+	
+	For x := GetMin.X To GetMax.X Do
+		For y := GetMin.Y To GetMax.Y Do
+		Begin
+			result[i] := Coord2D.Create(x,y);
+			inc(i);
+		End;
 End;
 
 Procedure Extent2D.Print();
@@ -286,28 +305,54 @@ Constructor Grid2D.Create(default: String; adjacency: Adjacency = rook);
 Begin
 	_defaultValue := default;
 	_aRule := adjacency;
-	_data := AoCStringMap.Create;
+	_data := TFPHashList.Create;
+	_addedValues := [];
 End;
 
 Function Grid2D.GetValue(coord: Coord2D): String;
 Var
 	key: String;
-	i: Integer;
+	strPtr: AoCStrPtr;
+	idx: Integer;
 Begin
 	key := coord.AsKey;
-	i := _data.IndexOf(key);
-	If i >= 0 Then
-		result := _data[key]
+	idx := _data.FindIndexOf(key);
+	If idx = -1 Then
+		result := _defaultValue
 	Else
-		result := _defaultValue;
+	Begin
+		strPtr := _data[idx];
+		result := strPtr^;
+	End;
 End;
 
-Function Grid2D.SetValue(v: String; coord: Coord2D): String;
+Procedure Grid2D.SetValue(v: String; coord: Coord2D);
 Var
 	key: String;
+	idx: Integer;
+	val: ^String;
 Begin
 	key := coord.AsKey;
-	_data[key] := v;
+	// WriteLn('Set value ', v, ' at key ', key);
+	// This is just to force v to be at a unique address
+	// If I just take a pointer to v, it's the same pointer for all values
+	// in _data.
+	// https://www.tutorialspoint.com/pascal/pascal_memory.htm
+	New(val);
+	If Not Assigned(val) Then
+	Begin
+		WriteLn('Error - Unable to allocate memory to set ', v, ' at ', key);
+		Exit;
+	End
+	Else
+		val^ := v;
+	
+	// There doesn't seem to be a function to replace the value for a key
+	idx := _data.FindIndexOf(key);
+	If idx <> -1 Then
+		_data.Delete(idx);
+
+	_data.Add(key, val);
 End;
 
 Function Grid2D.GetExtent(): Extent2D;
@@ -323,7 +368,7 @@ Begin
 	result := [];
     For i := 0 To _data.Count-1 Do
     Begin
-    	c := Coord2D.Create(_data.Keys[i]);
+    	c := Coord2D.Create(_data.NameOfIndex(i));
     	PushCoord(c, result);
     End;
 End;
@@ -331,14 +376,18 @@ End;
 Function Grid2D.GetCoords(withValue: String): Coord2DArray;
 Var
 	key: String;
-	i: Integer;
+	idx: Integer;
+	strPtr: AoCStrPtr;
+	val: String;
 	c: Coord2D;
 Begin
 	result := [];
-    For i := 0 To _data.Count-1 Do
+    For idx := 0 To _data.Count-1 Do
     Begin
-    	key := _data.Keys[i];
-    	If _data[key] = withValue Then
+    	key := _data.NameOfIndex(idx);
+    	strPtr := _data[idx];
+    	val := strPtr^;
+    	If val = withValue Then
     	Begin
 			c := Coord2D.Create(key);
 			PushCoord(c, result);

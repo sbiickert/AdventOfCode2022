@@ -14,6 +14,7 @@ Type
     AoCIntArray =        array of Integer;
     AoCStringListGroup = array of TStringList;
     AoCStringMap =       specialize TFPGMap<String, String>;
+    AoCIntegerMap =       specialize TFPGMap<String, Integer>;
 
 Function ReadInput(inputFilename: String):   TStringList;
 Function ReadGroupedInput(inputFilename: String):   AoCStringListGroup;
