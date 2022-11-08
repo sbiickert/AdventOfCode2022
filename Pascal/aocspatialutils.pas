@@ -27,6 +27,7 @@ Type
             Function AsKey(): String; Virtual;
     End;
     Coord2DArray =   array Of Coord2D;
+    Coord2DPtr = ^Coord2D;
     
     Coord3D = class(Coord2D)
     	Private
@@ -40,6 +41,7 @@ Type
             Function AsKey(): String; Override;
     End;
     Coord3DArray = array of Coord2D;
+    Coord3DPtr = ^Coord3D;
     
     Extent2D = Class
     	Private
@@ -55,6 +57,7 @@ Type
     		Function AllContainedCoords(): Coord2DArray;
     		Procedure Print();
     End;
+    Extent2DPtr = ^Extent2D;
     
     Direction = (up, down, left, right);
     MapDirection = (n, s, e, w);
@@ -66,14 +69,16 @@ Type
     		_defaultValue: String;
     		_aRule: Adjacency;
     		_data: TFPHashList;
-    		_addedValues: AoCStringArray;
     	Public
     		Constructor Create(default: String; adjacency: Adjacency = rook);
     		Function GetValue(coord: Coord2D): String;
     		Procedure SetValue(v: String; coord: Coord2D);
+    		Function GetPtr(coord: Coord2D): Pointer;
+    		Procedure SetPtr(ptr: Pointer; coord: Coord2D);
     		Function GetExtent(): Extent2D;
     		Function GetCoords(): Coord2DArray;
     		Function GetCoords(withValue: String): Coord2DArray;
+    		Function GetHistogram(): AoCIntegerMap;
     		Function GetNeighbourOffsets(): Coord2DArray;
     		Function GetNeighbourCoords(fromCoord: Coord2D): Coord2DArray;
     		Procedure Print();
@@ -306,7 +311,6 @@ Begin
 	_defaultValue := default;
 	_aRule := adjacency;
 	_data := TFPHashList.Create;
-	_addedValues := [];
 End;
 
 Function Grid2D.GetValue(coord: Coord2D): String;
@@ -330,29 +334,48 @@ Procedure Grid2D.SetValue(v: String; coord: Coord2D);
 Var
 	key: String;
 	idx: Integer;
-	val: ^String;
+	ptr: ^String;
 Begin
-	key := coord.AsKey;
-	// WriteLn('Set value ', v, ' at key ', key);
-	// This is just to force v to be at a unique address
-	// If I just take a pointer to v, it's the same pointer for all values
-	// in _data.
 	// https://www.tutorialspoint.com/pascal/pascal_memory.htm
-	New(val);
-	If Not Assigned(val) Then
+	New(ptr);
+	If Not Assigned(ptr) Then
 	Begin
+		key := coord.AsKey;
 		WriteLn('Error - Unable to allocate memory to set ', v, ' at ', key);
 		Exit;
-	End
-	Else
-		val^ := v;
+	End;
 	
+	ptr^ := v;
+	SetPtr(ptr, coord);
+End;
+
+Function Grid2D.GetPtr(coord: Coord2D): Pointer;
+Var
+	key: String;
+	idx: Integer;
+Begin
+	key := coord.AsKey;
+	idx := _data.FindIndexOf(key);
+	If idx = -1 Then
+		result := @_defaultValue
+	Else
+	Begin
+		result := _data[idx];
+	End;
+End;
+
+Procedure Grid2D.SetPtr(ptr: Pointer; coord: Coord2D);
+Var
+	key: String;
+	idx: Integer;
+Begin
+	key := coord.AsKey;
 	// There doesn't seem to be a function to replace the value for a key
 	idx := _data.FindIndexOf(key);
 	If idx <> -1 Then
 		_data.Delete(idx);
 
-	_data.Add(key, val);
+	_data.Add(key, ptr);
 End;
 
 Function Grid2D.GetExtent(): Extent2D;
@@ -393,6 +416,25 @@ Begin
 			PushCoord(c, result);
     	End;
     End;
+End;
+
+Function Grid2D.GetHistogram(): AoCIntegerMap;
+Var
+	idx: Integer;
+	key: String;
+	strPtr: AoCStrPtr;
+	val: String;
+Begin
+	result := AoCIntegerMap.Create;
+    For idx := 0 To _data.Count-1 Do
+    Begin
+    	key := _data.NameOfIndex(idx);
+    	strPtr := _data[idx];
+    	val := strPtr^;
+    	If (result.IndexOf(val) = -1) Then
+    		result[val] := 0;
+    	result[val] := result[val] + 1;
+	End;	
 End;
 
 Function Grid2D.GetNeighbourOffsets(): Coord2DArray;

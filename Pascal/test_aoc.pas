@@ -9,7 +9,8 @@ Const
 Procedure TestSpatial();
 Var
     c1, c2: Coord2D;
-    ext: Extent2D;
+    ext, extOut: Extent2D;
+    extPtr: Extent2DPtr;
 	grid: Grid2D;
 	neighbours: Coord2DArray;
 	c3: Coord3D;
@@ -35,6 +36,8 @@ Begin
     c2 := Coord2D.Create(c2.AsKey);
     c2.Print;
     
+    WriteLn('Grid testing');
+    
     grid := Grid2D.Create('.', queen);
     grid.SetValue('X', c1);
     grid.SetValue('*', c2);
@@ -45,6 +48,14 @@ Begin
     	neighbours[i].Print;
     End;
     grid.Print;
+    
+    ext.Print;
+    New(extPtr);
+    extPtr^ := ext;
+    grid.SetPtr(extPtr, c1);
+    extPtr := grid.GetPtr(c1);
+    extOut := extPtr^;
+    extOut.Print;
 
 	c3 := Coord3D.create(1,2,3);
 	c3.Print;
