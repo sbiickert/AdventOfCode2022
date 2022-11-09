@@ -2,3 +2,5 @@
 *.o
 *.ppu
 .DS_Store
+.DS_Store
+Perl/.DS_Store

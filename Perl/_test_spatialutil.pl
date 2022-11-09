@@ -16,10 +16,11 @@ use Data::Dumper;
 
 #test_coord2d();
 #test_coord3d();
-test_extent2d();
+#test_extent2d();
+test_grid2d();
 
 sub test_coord2d {
-	say "Testing Coord2D";
+	say "\nTesting Coord2D";
 	my $c2d = C2D_create(10, 30);
 	say C2D_to_str($c2d);
 	
@@ -40,7 +41,7 @@ sub test_coord2d {
 }
 
 sub test_coord3d {
-	say "Testing Coord3D";
+	say "\nTesting Coord3D";
 	my $c3d = C3D_create(10, 30, -5);
 	say C3D_to_str($c3d);
 	
@@ -61,7 +62,7 @@ sub test_coord3d {
 }
 
 sub test_extent2d {
-	say "Testing Extent2D";
+	say "\nTesting Extent2D";
 	my $c1 = C2D_create(1,1);
 	my $c2 = C2D_create(2,2);
 	my $c3 = C2D_create(3,3);
@@ -76,4 +77,38 @@ sub test_extent2d {
 	say 'The area of e2 is ' . E2D_area($e2);
 	say (E2D_contains($e2, $c2) ? 'c2 is contained by e2' : 'c2 is outside e2');
 	say (E2D_contains($e2, $c4) ? 'c4 is contained by e2' : 'c4 is outside e2');
+}
+
+sub test_grid2d {
+	say "\nTesting Grid2D";
+	my $g2d = G2D_create('.', 'rook');
+	print Dumper($g2d);
+	
+	my @coords = (C2D_create(1,1), C2D_create(2,2), C2D_create(3,3), C2D_create(4,4));
+	say 'hi';
+	G2D_set($g2d, $coords[0], 'A');
+	G2D_set($g2d, $coords[1], 'B');
+	G2D_set($g2d, $coords[3], 'D');
+	say 'bi';
+	G2D_print($g2d);
+	say 'pi';
+	print Dumper($g2d);
+	say 'The value at ' . C2D_to_str($coords[1]) . ' is ' . G2D_get($g2d, $coords[1]);
+	say 'The value at ' . C2D_to_str($coords[2]) . ' is ' . G2D_get($g2d, $coords[2]);
+	my @all = G2D_coords($g2d);
+	say 'All coords in grid:';
+	for my $c (@all) { say C2D_to_str($c); }
+	my @ds = G2D_coords_with_value($g2d, 'D');
+	say "All D's in grid:";
+	for my $c (@ds) { say C2D_to_str($c); }
+	my @xs = G2D_coords_with_value($g2d, 'X');
+	say "All X's in grid:";
+	for my $c (@xs) { say C2D_to_str($c); }
+	say 'Histogram of values:';
+	print Dumper(G2D_histogram( $g2d ));
+	my @neighbors = G2D_neighbors( $g2d, $coords[1] );
+	for my $n (@neighbors) {
+		G2D_set($g2d, $n, '*');
+	}
+	G2D_print($g2d);
 }

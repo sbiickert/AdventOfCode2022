@@ -8,17 +8,21 @@ use lib $local_lib;
 package AOC::SpatialUtil;
 use Modern::Perl 2018;
 use Exporter;
-use List::Util qw(min max);
 use feature 'signatures';
+use List::Util qw(min max);
 
 our @ISA = qw( Exporter );
 #our @EXPORT_OK = qw(C2D_create C3D_create);
 our @EXPORT = qw(C2D_create C2D_to_str C2D_from_str 
-				 C2D_equals C2D_delta C2D_distance C2D_manhattan
+				 C2D_equals C2D_add C2D_delta C2D_distance C2D_manhattan
 				 C3D_create C3D_to_str C3D_from_str 
 				 C3D_equals C3D_delta C3D_distance C3D_manhattan
 				 E2D_create E2D_build E2D_to_str
-				 E2D_min E2D_max E2D_width E2D_height E2D_area E2D_contains);
+				 E2D_min E2D_max E2D_width E2D_height E2D_area
+				 E2D_contains E2D_all_coords
+				 G2D_create G2D_get G2D_set G2D_extent 
+				 G2D_coords G2D_coords_with_value G2D_histogram 
+				 G2D_offsets G2D_neighbors G2D_print);
 
 # -------------------------------------------------------
 # Coord2D
@@ -42,6 +46,10 @@ sub C2D_from_str($val) {
 
 sub C2D_equals($c1, $c2) {
 	return $c1->[0] == $c2->[0] && $c1->[1] == $c2->[1];
+}
+
+sub C2D_add($c1, $c2) {
+	return C2D_create($c2->[0] + $c1->[0], $c2->[1] + $c1->[1]);
 }
 
 sub C2D_delta($c1, $c2) {
@@ -112,18 +120,26 @@ sub E2D_create($c_min, $c_max) {
 }
 
 sub E2D_build(@c_list) {
-	my @data = (0) x 4;
-	if (scalar(@c_list) > 0) {
-		my $c = $c_list[0];
-		@data = ($c->[0], $c->[1], $c->[0], $c->[1]);
-	}
+	my @data = ();
 	for my $c ( @c_list ) {
-		$data[0] = min($data[0], $c->[0]);
-		$data[1] = min($data[1], $c->[1]);
-		$data[2] = max($data[2], $c->[0]);
-		$data[3] = max($data[3], $c->[1]);
+		E2D_expand_to_fit(\@data, $c);
 	}
 	return \@data;
+}
+
+sub E2D_expand_to_fit($e2d, $c2d) {
+	if ( scalar(@{$e2d}) > 0 ) {
+		$e2d->[0] = min($e2d->[0], $c2d->[0]);
+		$e2d->[1] = min($e2d->[1], $c2d->[1]);
+		$e2d->[2] = max($e2d->[2], $c2d->[0]);
+		$e2d->[3] = max($e2d->[3], $c2d->[1]);
+	}
+	else {
+		$e2d->[0] = $c2d->[0];
+		$e2d->[1] = $c2d->[1];
+		$e2d->[2] = $c2d->[0];
+		$e2d->[3] = $c2d->[1];
+	}
 }
 
 sub E2D_to_str($e2d) {
@@ -139,11 +155,11 @@ sub E2D_max($e2d) {
 }
 
 sub E2D_width($e2d) {
-	return $e2d->[2] - $e2d->[0]
+	return $e2d->[2] - $e2d->[0] + 1;
 }
 
 sub E2D_height($e2d) {
-	return $e2d->[3] - $e2d->[1]
+	return $e2d->[3] - $e2d->[1] + 1;
 }
 
 sub E2D_area($e2d) {
@@ -155,11 +171,107 @@ sub E2D_contains($e2d, $c2d) {
 			$e2d->[1] <= $c2d->[1] && $c2d->[1] <= $e2d->[3];
 }
 
+sub E2D_all_coords($e2d) {
+	my @coords = ();
+	for (my $x = $e2d->[0]; $x <= $e2d->[2]; $x++) {
+		for (my $y = $e2d->[1]; $y <= $e2d->[3]; $y++) {
+			push( @coords, C2D_create($x, $y) );
+		}
+	}
+	return @coords;
+}
+
 # -------------------------------------------------------
 # Grid2D
 #
-# Data model: array reference [data hashref, default, rule]
+# Data model: array reference [data hashref, default, rule, extent]
 # -------------------------------------------------------
+
+our @RULES = ('rook', 'bishop', 'queen');
+
+sub G2D_create($default, $adj_rule) {
+	if ( !grep( /^$adj_rule$/, @RULES ) ) {
+		die "$adj_rule is not a valid adjacency rule: @RULES";
+	}
+	my $g2d = [{}, $default, $adj_rule, []];
+}
+
+sub G2D_get($g2d, $c2d) {
+	my $key = C2D_to_str($c2d);
+	my $val = $g2d->[0]{$key} || $g2d->[1];
+	return $val;
+}
+
+sub G2D_set($g2d, $c2d, $val) {
+	my $key = C2D_to_str($c2d);
+	$g2d->[0]{$key} = $val;
+	E2D_expand_to_fit( G2D_extent($g2d), $c2d );
+}
+
+sub G2D_extent($g2d) {
+	return $g2d->[3];
+}
+
+sub G2D_coords($g2d) {
+	my @coords = ();
+	for my $key (keys(%{$g2d->[0]})) {
+		push( @coords, C2D_from_str($key) );
+	}
+	return @coords;
+}
+
+sub G2D_coords_with_value($g2d, $val) {
+	my @coords = ();
+	for my $key (keys(%{$g2d->[0]})) {
+		if ($g2d->[0]{$key} eq $val) {
+			push( @coords, C2D_from_str($key) );
+		}
+	}
+	return @coords;
+}
+
+sub G2D_histogram($g2d) {
+	my $hist = {};
+	for my $c ( E2D_all_coords( $g2d->[3] ) ) {
+		my $val = G2D_get($g2d, $c);
+		$hist->{$val} ++;
+	}
+	return $hist;
+}
+
+sub G2D_offsets($g2d) {
+	my @offsets = ();
+	
+	my $rule = $g2d->[2];
+	if ($rule eq 'rook' || $rule eq 'queen') {
+		push( @offsets, ([-1,0], [1,0], [0,-1], [0,1]) );
+	}
+	if ($rule eq 'bishop' || $rule eq 'queen') {
+		push( @offsets, ([-1,-1], [1,-1], [-1,1], [1,1]) );
+	}	
+	return @offsets;
+}
+
+sub G2D_neighbors($g2d, $c2d) {
+	my @offsets = G2D_offsets($g2d);
+	my @neighbors = ();
+	
+	for my $o (@offsets) {
+		push( @neighbors, C2D_add( $c2d, $o ));
+	}
+	return @neighbors;
+}
+
+sub G2D_print($g2d) {
+	my $e2d = G2D_extent($g2d);
+	for (my $y = $e2d->[1]; $y <= $e2d->[3]; $y++) {
+		my @row = ();
+		for (my $x = $e2d->[0]; $x <= $e2d->[2]; $x++) {
+			push( @row, G2D_get($g2d, C2D_create($x, $y)) );
+		}
+		say join(' ', @row);
+	}
+}
 
 
 1;
