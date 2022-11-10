@@ -16,7 +16,7 @@ our @ISA = qw( Exporter );
 our @EXPORT = qw(C2D_create C2D_to_str C2D_from_str 
 				 C2D_equals C2D_add C2D_delta C2D_distance C2D_manhattan
 				 C3D_create C3D_to_str C3D_from_str 
-				 C3D_equals C3D_delta C3D_distance C3D_manhattan
+				 C3D_equals C3D_add C3D_delta C3D_distance C3D_manhattan
 				 E2D_create E2D_build E2D_to_str
 				 E2D_min E2D_max E2D_width E2D_height E2D_area
 				 E2D_contains E2D_all_coords
@@ -93,6 +93,12 @@ sub C3D_equals($c1, $c2) {
 			$c1->[2] == $c2->[2];
 }
 
+sub C3D_add($c1, $c2) {
+	return C3D_create($c2->[0] + $c1->[0],
+					  $c2->[1] + $c1->[1],
+					  $c2->[2] + $c1->[2]);
+}
+
 sub C3D_delta($c1, $c2) {
 	return C3D_create($c2->[0] - $c1->[0],
 					  $c2->[1] - $c1->[1],
@@ -128,21 +134,28 @@ sub E2D_build(@c_list) {
 }
 
 sub E2D_expand_to_fit($e2d, $c2d) {
-	if ( scalar(@{$e2d}) > 0 ) {
-		$e2d->[0] = min($e2d->[0], $c2d->[0]);
-		$e2d->[1] = min($e2d->[1], $c2d->[1]);
-		$e2d->[2] = max($e2d->[2], $c2d->[0]);
-		$e2d->[3] = max($e2d->[3], $c2d->[1]);
-	}
-	else {
+	if (E2D_is_empty($e2d)) {
 		$e2d->[0] = $c2d->[0];
 		$e2d->[1] = $c2d->[1];
 		$e2d->[2] = $c2d->[0];
 		$e2d->[3] = $c2d->[1];
 	}
+	else {
+		$e2d->[0] = min($e2d->[0], $c2d->[0]);
+		$e2d->[1] = min($e2d->[1], $c2d->[1]);
+		$e2d->[2] = max($e2d->[2], $c2d->[0]);
+		$e2d->[3] = max($e2d->[3], $c2d->[1]);
+	}
+}
+
+sub E2D_is_empty($e2d) {
+	return scalar(@{$e2d}) == 0;
 }
 
 sub E2D_to_str($e2d) {
+	if (E2D_is_empty($e2d)) {
+		return '{empty}';
+	}
 	return '{min: [' . $e2d->[0] . ',' . $e2d->[1] . '], max: [' . $e2d->[2] . ',' . $e2d->[3] . ']}';
 }
 
@@ -155,10 +168,12 @@ sub E2D_max($e2d) {
 }
 
 sub E2D_width($e2d) {
+	if (E2D_is_empty($e2d)) { return 0; }
 	return $e2d->[2] - $e2d->[0] + 1;
 }
 
 sub E2D_height($e2d) {
+	if (E2D_is_empty($e2d)) { return 0; }
 	return $e2d->[3] - $e2d->[1] + 1;
 }
 
@@ -167,12 +182,14 @@ sub E2D_area($e2d) {
 }
 
 sub E2D_contains($e2d, $c2d) {
+	if (E2D_is_empty($e2d)) { return 0; }
 	return $e2d->[0] <= $c2d->[0] && $c2d->[0] <= $e2d->[2] &&
 			$e2d->[1] <= $c2d->[1] && $c2d->[1] <= $e2d->[3];
 }
 
 sub E2D_all_coords($e2d) {
 	my @coords = ();
+	if (E2D_is_empty($e2d)) { return @coords; }
 	for (my $x = $e2d->[0]; $x <= $e2d->[2]; $x++) {
 		for (my $y = $e2d->[1]; $y <= $e2d->[3]; $y++) {
 			push( @coords, C2D_create($x, $y) );
