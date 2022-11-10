@@ -16,8 +16,8 @@ use Data::Dumper;
 
 #test_coord2d();
 #test_coord3d();
-#test_extent2d();
-test_grid2d();
+test_extent2d();
+#test_grid2d();
 
 sub test_coord2d {
 	say "\nTesting Coord2D";
@@ -77,6 +77,20 @@ sub test_extent2d {
 	say 'The area of e2 is ' . E2D_area($e2);
 	say (E2D_contains($e2, $c2) ? 'c2 is contained by e2' : 'c2 is outside e2');
 	say (E2D_contains($e2, $c4) ? 'c4 is contained by e2' : 'c4 is outside e2');
+	
+	test_e2d_intersect([1,1,10,10],[5,5,12,12]);
+	test_e2d_intersect([1,1,10,10],[5,5,7,7]);
+	test_e2d_intersect([1,1,10,10],[1,1,12,2]);
+	test_e2d_intersect([1,1,10,10],[11,11,12,12]);
+	test_e2d_intersect([1,1,10,10],[1,10,10,20]);
+}
+
+sub test_e2d_intersect {
+	my ($e1, $e2) = @_;
+	my $e_int = E2D_intersect($e1, $e2);
+	say 'e1:    ' . E2D_to_str($e1);
+	say 'e2:    ' . E2D_to_str($e2);
+	say 'e_int: ' . E2D_to_str($e_int);
 }
 
 sub test_grid2d {

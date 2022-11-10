@@ -19,7 +19,7 @@ our @EXPORT = qw(C2D_create C2D_to_str C2D_from_str
 				 C3D_equals C3D_add C3D_delta C3D_distance C3D_manhattan
 				 E2D_create E2D_build E2D_to_str
 				 E2D_min E2D_max E2D_width E2D_height E2D_area
-				 E2D_contains E2D_all_coords
+				 E2D_contains E2D_all_coords E2D_intersect
 				 G2D_create G2D_get G2D_set G2D_extent 
 				 G2D_coords G2D_coords_with_value G2D_histogram 
 				 G2D_offsets G2D_neighbors G2D_print);
@@ -196,6 +196,18 @@ sub E2D_all_coords($e2d) {
 		}
 	}
 	return @coords;
+}
+
+sub E2D_intersect($e1, $e2) {
+	if (E2D_is_empty($e1) || E2D_is_empty($e2)) { return []; }
+	my $common_min_x = max($e1->[0], $e2->[0]);
+	my $common_max_x = min($e1->[2], $e2->[2]);
+	if ($common_max_x < $common_min_x) { return []; }
+	my $common_min_y = max($e1->[1], $e2->[1]);
+	my $common_max_y = min($e1->[3], $e2->[3]);
+	if ($common_max_y < $common_min_y) { return []; }
+	
+	return [$common_min_x, $common_min_y, $common_max_x, $common_max_y];
 }
 
 # -------------------------------------------------------
