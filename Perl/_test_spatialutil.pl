@@ -26,10 +26,10 @@ sub test_coord2d {
 	
 	my $other = C2D_create(10,30);
 	say 'other: ' . C2D_to_str($other);
-	print "Other is equal? " . C2D_equals($c2d, $other) . "\n";
+	print "Other is equal? " . C2D_equal($c2d, $other) . "\n";
 	$other = C2D_create(5,20);
 	say 'other: ' . C2D_to_str($other);
-	print "Other is equal? " . C2D_equals($c2d, $other) . "\n";
+	print "Other is equal? " . C2D_equal($c2d, $other) . "\n";
 	
 	my $delta = C2D_delta($c2d, $other);
 	say "Delta from c2d to other is " . C2D_to_str($delta);
@@ -47,10 +47,10 @@ sub test_coord3d {
 	
 	my $other = C3D_create(10,30,-5);
 	say 'other: ' . C3D_to_str($other);
-	print "Other is equal? " . C3D_equals($c3d, $other) . "\n";
+	print "Other is equal? " . C3D_equal($c3d, $other) . "\n";
 	$other = C3D_create(5,20,15);
 	say 'other: ' . C3D_to_str($other);
-	print "Other is equal? " . C3D_equals($c3d, $other) . "\n";
+	print "Other is equal? " . C3D_equal($c3d, $other) . "\n";
 	
 	my $delta = C3D_delta($c3d, $other);
 	say "Delta from c3d to other is " . C3D_to_str($delta);
@@ -83,14 +83,28 @@ sub test_extent2d {
 	test_e2d_intersect([1,1,10,10],[1,1,12,2]);
 	test_e2d_intersect([1,1,10,10],[11,11,12,12]);
 	test_e2d_intersect([1,1,10,10],[1,10,10,20]);
+	
+	test_e2d_union([1,1,10,10],[5,5,12,12]);
+	test_e2d_union([1,1,10,10],[5,5,7,7]);
+	test_e2d_union([1,1,10,10],[1,1,12,2]);
+	test_e2d_union([1,1,10,10],[11,11,12,12]);
+	test_e2d_union([1,1,10,10],[1,10,10,20]);
 }
 
 sub test_e2d_intersect {
 	my ($e1, $e2) = @_;
+	say 'Intersection of ' . E2D_to_str($e1) . ' and ' . E2D_to_str($e2);
 	my $e_int = E2D_intersect($e1, $e2);
-	say 'e1:    ' . E2D_to_str($e1);
-	say 'e2:    ' . E2D_to_str($e2);
-	say 'e_int: ' . E2D_to_str($e_int);
+	say E2D_to_str($e_int);
+}
+
+sub test_e2d_union {
+	my ($e1, $e2) = @_;
+	say 'Union of ' . E2D_to_str($e1) . ' and ' . E2D_to_str($e2);
+	my @products = E2D_union($e1, $e2);
+	for my $e (@products) {
+		say E2D_to_str($e);
+	}
 }
 
 sub test_grid2d {
@@ -99,13 +113,10 @@ sub test_grid2d {
 	print Dumper($g2d);
 	
 	my @coords = (C2D_create(1,1), C2D_create(2,2), C2D_create(3,3), C2D_create(4,4));
-	say 'hi';
 	G2D_set($g2d, $coords[0], 'A');
 	G2D_set($g2d, $coords[1], 'B');
 	G2D_set($g2d, $coords[3], 'D');
-	say 'bi';
 	G2D_print($g2d);
-	say 'pi';
 	print Dumper($g2d);
 	say 'The value at ' . C2D_to_str($coords[1]) . ' is ' . G2D_get($g2d, $coords[1]);
 	say 'The value at ' . C2D_to_str($coords[2]) . ' is ' . G2D_get($g2d, $coords[2]);
