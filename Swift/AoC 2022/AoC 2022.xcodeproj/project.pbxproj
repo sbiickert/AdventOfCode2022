@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		3706559F28F9AC4A0051E8C2 /* AoC_2022App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3706559E28F9AC4A0051E8C2 /* AoC_2022App.swift */; };
-		370655A128F9AC4A0051E8C2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370655A028F9AC4A0051E8C2 /* ContentView.swift */; };
 		370655A328F9AC4B0051E8C2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 370655A228F9AC4B0051E8C2 /* Assets.xcassets */; };
 		370655A628F9AC4B0051E8C2 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 370655A528F9AC4B0051E8C2 /* Preview Assets.xcassets */; };
 		370655B628F9AC950051E8C2 /* SolutionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370655AE28F9AC950051E8C2 /* SolutionList.swift */; };
@@ -28,7 +27,6 @@
 /* Begin PBXFileReference section */
 		3706559B28F9AC4A0051E8C2 /* AoC 2022.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AoC 2022.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3706559E28F9AC4A0051E8C2 /* AoC_2022App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AoC_2022App.swift; sourceTree = "<group>"; };
-		370655A028F9AC4A0051E8C2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		370655A228F9AC4B0051E8C2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		370655A528F9AC4B0051E8C2 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		370655A728F9AC4B0051E8C2 /* AoC_2022.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AoC_2022.entitlements; sourceTree = "<group>"; };
@@ -80,7 +78,6 @@
 				370655BE28F9ACA90051E8C2 /* Libraries */,
 				370655AD28F9AC7A0051E8C2 /* Views */,
 				3706559E28F9AC4A0051E8C2 /* AoC_2022App.swift */,
-				370655A028F9AC4A0051E8C2 /* ContentView.swift */,
 				370655A228F9AC4B0051E8C2 /* Assets.xcassets */,
 				370655A728F9AC4B0051E8C2 /* AoC_2022.entitlements */,
 				370655A428F9AC4B0051E8C2 /* Preview Content */,
@@ -211,7 +208,6 @@
 				370655B628F9AC950051E8C2 /* SolutionList.swift in Sources */,
 				370655C228F9ACB80051E8C2 /* AoCStrings.swift in Sources */,
 				370655BA28F9AC950051E8C2 /* ContentView.swift in Sources */,
-				370655A128F9AC4A0051E8C2 /* ContentView.swift in Sources */,
 				370655BD28F9AC950051E8C2 /* SolutionRow.swift in Sources */,
 				370655B728F9AC950051E8C2 /* StopwatchUnitView.swift in Sources */,
 				3706559F28F9AC4A0051E8C2 /* AoC_2022App.swift in Sources */,
@@ -273,7 +269,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -327,7 +323,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
@@ -355,6 +351,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "ca.biickert.AoC-2022";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -382,6 +379,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "ca.biickert.AoC-2022";
 				PRODUCT_NAME = "$(TARGET_NAME)";
