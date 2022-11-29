@@ -6,7 +6,7 @@ BEGIN {
 use lib $local_lib;
 
 package AOC::SpatialUtil;
-use Modern::Perl 2018;
+use Modern::Perl 2022;
 use Exporter;
 use feature 'signatures';
 use List::Util qw(min max);

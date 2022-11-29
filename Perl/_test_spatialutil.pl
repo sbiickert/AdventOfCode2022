@@ -9,15 +9,15 @@ BEGIN {
 use lib $directory;
 use lib $local_lib;
 
-use Modern::Perl 2018;
+use Modern::Perl 2022;
 use AOC::Util;
 use AOC::SpatialUtil;
 use Data::Dumper;
 
-#test_coord2d();
-#test_coord3d();
+test_coord2d();
+test_coord3d();
 test_extent2d();
-#test_grid2d();
+test_grid2d();
 
 sub test_coord2d {
 	say "\nTesting Coord2D";
