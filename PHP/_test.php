@@ -1,11 +1,12 @@
 <?php
 
 require 'AoC/Util.php';
+require 'AoC/SpatialUtil.php';
 
 echo "Running _test.php\n";
 
-
 test_util();
+test_spatial_util();
 
 function test_util() {
 	echo "test_util\n";
@@ -35,4 +36,38 @@ function test_util() {
 	echo "Test reading grouped input with invalid index.\n";
 	$lines = read_grouped_input($test_input_file, 10);
 	assert(count($lines) == 0, "Expected 0 lines in group 10.");
+}
+
+function test_spatial_util() {
+	echo "test_spatial_util\n";
+	
+	test_coord2D();
+}
+
+function test_coord2D() {
+	echo "test_coord2D\n";
+	$c2d = new Coord2D(10, 30);
+	echo $c2d->toString() . "\n";
+	
+	$other = new Coord2D(10, 30);
+	echo 'other: ' . $other->toString() . "\n";
+	assert( $c2d->equalTo($other), "c2d and other were not equal." );
+	
+	$other->setX(5); $other->setY(20);
+	echo 'other: ' . $other->toString() . "\n";
+	$delta = $c2d->deltaTo($other);
+	echo 'delta: ' . $delta->toString() . "\n";
+	assert( $delta->getX() == -5 && $delta->getY() == -10 );
+	
+	$md = $c2d->manhattanDistanceTo($other);
+	echo "Manhattan distance: $md\n";
+	assert( $md == 15 );
+	
+	$dist = $c2d->distanceTo($other);
+	echo "Distance: $dist\n";
+	
+	$c2dString = $c2d->toString();
+	$clone = Coord2D::fromString($c2dString);
+	echo 'clone: ' . $clone->toString() . "\n";
+	assert($c2d->equalTo($clone), "c2d and clone were not equal." );
 }
