@@ -15,9 +15,9 @@ use AOC::SpatialUtil;
 use Data::Dumper;
 
 test_coord2d();
-test_coord3d();
-test_extent2d();
-test_grid2d();
+#test_coord3d();
+#test_extent2d();
+#test_grid2d();
 
 sub test_coord2d {
 	say "\nTesting Coord2D";
@@ -26,18 +26,23 @@ sub test_coord2d {
 	
 	my $other = C2D_create(10,30);
 	say 'other: ' . C2D_to_str($other);
-	print "Other is equal? " . C2D_equal($c2d, $other) . "\n";
+	(C2D_equal($c2d, $other)) or die "Coordinates were not equal.";
+	
 	$other = C2D_create(5,20);
 	say 'other: ' . C2D_to_str($other);
-	print "Other is equal? " . C2D_equal($c2d, $other) . "\n";
+	(!C2D_equal($c2d, $other)) or die "Coordinates were equal.";
 	
 	my $delta = C2D_delta($c2d, $other);
 	say "Delta from c2d to other is " . C2D_to_str($delta);
+	($delta->[0] == -5 && $delta->[1] == -10) or die "delta was wrong.";
+	
 	say "Distance from c2d to other is " . C2D_distance($c2d, $other);
 	say "Manhattan dist from c2d to other is " . C2D_manhattan($c2d, $other);
+	(C2D_manhattan($c2d, $other) == 15) or die "Manhattan distance was wrong.";
 	
 	my $clone = C2D_from_str( C2D_to_str($c2d) );
 	say 'The clone ' . C2D_to_str($clone) . ' is the same as the original.';
+	(C2D_equal($c2d, $clone)) or die "The original and the clone are not equal.";
 }
 
 sub test_coord3d {
