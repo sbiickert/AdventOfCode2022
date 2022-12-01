@@ -25,7 +25,7 @@ my @input = read_grouped_input("$INPUT_PATH/$INPUT_FILE");
 say "Advent of Code 2022, Day 01: Calorie Counting";
 
 my @elf_calories = solve_part_one(@input);
-#solve_part_two(@input);
+solve_part_two(@elf_calories);
 
 exit( 0 );
 
@@ -51,4 +51,10 @@ sub solve_part_one {
 
 sub solve_part_two {
 	my @input = @_;
+	
+	my @sorted_elf_calories = sort {$b <=> $a} @input;
+	my $top_three = $sorted_elf_calories[0] +
+					$sorted_elf_calories[1] +
+					$sorted_elf_calories[2];
+	say "Part Two: the top three elves are carrying $top_three calories.";
 }
