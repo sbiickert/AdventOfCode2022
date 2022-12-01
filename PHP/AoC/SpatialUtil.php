@@ -82,7 +82,10 @@ class Extent2D {
 	}
 	
 	function expandToFit(Coord2D $c) {
-		
+		$this->min->setX( min( $this->min->getX(), $c->getX() ) );
+		$this->min->setY( min( $this->min->getY(), $c->getY() ) );
+		$this->max->setX( max( $this->max->getX(), $c->getX() ) );
+		$this->max->setY( max( $this->max->getY(), $c->getY() ) );
 	}
 	
 	function getMin(): Coord2D {
@@ -94,11 +97,11 @@ class Extent2D {
 	}
 	
 	function getWidth(): int {
-		return $this->max->x = $this->min->x;
+		return $this->max->getX() - $this->min->getX() + 1;
 	}
 	
 	function getHeight(): int {
-		return $this->max->y = $this->min->y;
+		return $this->max->getY() - $this->min->getY() + 1;
 	}
 	
 	function getArea(): int {
@@ -117,6 +120,11 @@ class Extent2D {
 	
 	function equalTo(Extent2D $other): bool {
 		return ($this->min->equalTo($other->min) && $this->max->equalTo($other->max));
+	}
+	
+	function contains(Coord2D $c): bool {
+		return $this->min->getX() <= $c->getX() && $c->getX() <= $this->max->getX() &&
+			$this->min->getY() <= $c->getY() && $c->getY() <= $this->max->getY();
 	}
 	
 	function toString(): string {

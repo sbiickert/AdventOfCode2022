@@ -42,6 +42,7 @@ function test_spatial_util() {
 	echo "test_spatial_util\n";
 	
 	test_coord2D();
+	test_extent2D();
 }
 
 function test_coord2D() {
@@ -70,4 +71,35 @@ function test_coord2D() {
 	$clone = Coord2D::fromString($c2dString);
 	echo 'clone: ' . $clone->toString() . "\n";
 	assert($c2d->equalTo($clone), "c2d and clone were not equal." );
+}
+
+function test_extent2D() {
+	echo "test_extent2D\n";
+	$c1 = new Coord2D(-1,1);
+	$c2 = new Coord2D(2,8);
+	$c3 = new Coord2D(3,3);
+	$c4 = new Coord2D(4,4);
+	$e1 = new Extent2D($c1, $c2);
+	echo $e1->toString() . "\n";
+	assert($e1->getMin()->getX() == -1);
+	assert($e1->getMin()->getY() == 1);
+	assert($e1->getMax()->getX() == 2);
+	assert($e1->getMax()->getY() == 8);
+	$c_list = array($c3, $c2, $c1);
+	$e2 = Extent2D::build($c_list);
+	echo $e2->toString() . "\n";
+	assert($e2->getMin()->getX() == -1);
+	assert($e2->getMin()->getY() == 1);
+	assert($e2->getMax()->getX() == 3);
+	assert($e2->getMax()->getY() == 8);
+	echo 'The width of e2 is ' . $e2->getWidth() . "\n";
+	echo 'The height of e2 is ' . $e2->getHeight() . "\n";
+	echo 'The area of e2 is ' . $e2->getArea() . "\n";
+	assert($e2->getWidth() == 5);
+	assert($e2->getHeight() == 8);
+	assert($e2->getArea() == 40);
+	echo ($e2->contains($c2) ? 'c2 is contained by e2' : 'c2 is outside e2') . "\n";
+	echo ($e2->contains($c4) ? 'c4 is contained by e2' : 'c4 is outside e2') . "\n";
+	assert($e2->contains($c2));
+	assert($e2->contains($c4) == false);
 }

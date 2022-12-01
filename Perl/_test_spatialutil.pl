@@ -16,7 +16,7 @@ use Data::Dumper;
 
 test_coord2d();
 #test_coord3d();
-#test_extent2d();
+test_extent2d();
 #test_grid2d();
 
 sub test_coord2d {
@@ -68,20 +68,33 @@ sub test_coord3d {
 
 sub test_extent2d {
 	say "\nTesting Extent2D";
-	my $c1 = C2D_create(1,1);
-	my $c2 = C2D_create(2,2);
+	my $c1 = C2D_create(-1,1);
+	my $c2 = C2D_create(2,8);
 	my $c3 = C2D_create(3,3);
 	my $c4 = C2D_create(4,4);
 	my $e1 = E2D_create($c1, $c2);
 	say E2D_to_str($e1);
+	($e1->[0] == -1) or die;
+	($e1->[1] == 1) or die;
+	($e1->[2] == 2) or die;
+	($e1->[3] == 8) or die;
 	my @c_list = ($c3, $c2, $c1);
 	my $e2 = E2D_build(@c_list);
 	say E2D_to_str($e2);
+	($e2->[0] == -1) or die;
+	($e2->[1] == 1) or die;
+	($e2->[2] == 3) or die;
+	($e2->[3] == 8) or die;
 	say 'The width of e2 is ' . E2D_width($e2);
 	say 'The height of e2 is ' . E2D_height($e2);
 	say 'The area of e2 is ' . E2D_area($e2);
+	(E2D_width($e2) == 5) or die;
+	(E2D_height($e2) == 8) or die;
+	(E2D_area($e2) == 40) or die;
 	say (E2D_contains($e2, $c2) ? 'c2 is contained by e2' : 'c2 is outside e2');
 	say (E2D_contains($e2, $c4) ? 'c4 is contained by e2' : 'c4 is outside e2');
+	(E2D_contains($e2, $c2)) or die;
+	(!E2D_contains($e2, $c4)) or die;
 	
 	test_e2d_intersect([1,1,10,10],[5,5,12,12]);
 	test_e2d_intersect([1,1,10,10],[5,5,7,7]);
