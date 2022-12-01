@@ -34,13 +34,12 @@ struct AoCResult {
 }
 
 class AoCUtil {
-	public static let INPUT_FOLDER_MIKE = "/Users/sjb/Developer/Advent of Code/2022/AdventOfCode2022/Input"
-	public static let INPUT_FOLDER_CLARIS = "/Users/sbiickert/Code/Advent of Code/2022/AdventOfCode2022/Input"
+	public static let INPUT_FOLDER = "~/Developer/Advent of Code/2022/AdventOfCode2022/input"
 	public static let ALPHABET = "abcdefghijklmnopqrstuvwxyz"
 
 	public static var solutions: [AoCSolution] {
 		get {
-			return [//Day01()
+			return [Day01()
 				].reversed()
 		}
 	}
@@ -66,20 +65,20 @@ class AoCUtil {
 	}
 
 	public static func fileName(day: Int, isTest: Bool) -> String {
-		return "\(String(format: "%02d", arguments: [day])).\(isTest ? "test" : "challenge").txt"
+		return "\(String(format: "day%02d", arguments: [day]))_\(isTest ? "test" : "challenge").txt"
 	}
 	
 	public static func inputPath(for fileName: String) -> URL {
-		var isDir: ObjCBool = true
-		var folderPath = URL(fileURLWithPath: INPUT_FOLDER_MIKE, isDirectory: true)
-		if FileManager.default.fileExists(atPath: folderPath.path, isDirectory: &isDir) == false {
-			folderPath = URL(fileURLWithPath: INPUT_FOLDER_CLARIS, isDirectory: true)
-		}
+		// If this is failing, check:
+		// 1. Sandboxing removed from Targets > Signing and Capabilities
+		// 2. Updated INPUT_FOLDER to current year
+		let input_folder = NSString(string: INPUT_FOLDER).expandingTildeInPath
+		let folderPath = URL(fileURLWithPath: input_folder, isDirectory: true)
 		let filePath = folderPath.appendingPathComponent(fileName)
 		//print(filePath)
 		return filePath
 	}
-	
+
 	public static func readInputFile(named name:String, removingEmptyLines removeEmpty:Bool) -> [String] {
 		var results = [String]()
 		do {

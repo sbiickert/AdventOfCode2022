@@ -22,6 +22,7 @@
 		370655C328F9ACB80051E8C2 /* AoCSpatial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370655C028F9ACB80051E8C2 /* AoCSpatial.swift */; };
 		370655C428F9ACB80051E8C2 /* AoCUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370655C128F9ACB80051E8C2 /* AoCUtil.swift */; };
 		370C391728F9C4B400ED1FDC /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 370C391628F9C4B400ED1FDC /* Algorithms */; };
+		B89BA5772939194A00AD9299 /* Day01.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89BA5762939194A00AD9299 /* Day01.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 		370655BF28F9ACB80051E8C2 /* AoCStrings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AoCStrings.swift; sourceTree = "<group>"; };
 		370655C028F9ACB80051E8C2 /* AoCSpatial.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AoCSpatial.swift; sourceTree = "<group>"; };
 		370655C128F9ACB80051E8C2 /* AoCUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AoCUtil.swift; sourceTree = "<group>"; };
+		B89BA5762939194A00AD9299 /* Day01.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day01.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +123,7 @@
 		370655C528F9AD620051E8C2 /* Solutions */ = {
 			isa = PBXGroup;
 			children = (
+				B89BA5762939194A00AD9299 /* Day01.swift */,
 			);
 			path = Solutions;
 			sourceTree = "<group>";
@@ -206,6 +209,7 @@
 				370655B828F9AC950051E8C2 /* InputList.swift in Sources */,
 				370655BB28F9AC950051E8C2 /* InputRow.swift in Sources */,
 				370655B628F9AC950051E8C2 /* SolutionList.swift in Sources */,
+				B89BA5772939194A00AD9299 /* Day01.swift in Sources */,
 				370655C228F9ACB80051E8C2 /* AoCStrings.swift in Sources */,
 				370655BA28F9AC950051E8C2 /* ContentView.swift in Sources */,
 				370655BD28F9AC950051E8C2 /* SolutionRow.swift in Sources */,
