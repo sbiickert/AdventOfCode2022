@@ -102,4 +102,6 @@ function test_extent2D() {
 	echo ($e2->contains($c4) ? 'c4 is contained by e2' : 'c4 is outside e2') . "\n";
 	assert($e2->contains($c2));
 	assert($e2->contains($c4) == false);
+	$all_coords = $e2->getAllCoords();
+	assert(count($all_coords) == $e2->getArea());
 }

@@ -95,6 +95,8 @@ sub test_extent2d {
 	say (E2D_contains($e2, $c4) ? 'c4 is contained by e2' : 'c4 is outside e2');
 	(E2D_contains($e2, $c2)) or die;
 	(!E2D_contains($e2, $c4)) or die;
+	my @all_coords = E2D_all_coords($e2);
+	(scalar(@all_coords) == E2D_area($e2)) or die;
 	
 	test_e2d_intersect([1,1,10,10],[5,5,12,12]);
 	test_e2d_intersect([1,1,10,10],[5,5,7,7]);
