@@ -5,8 +5,8 @@ Program AOC_2022_Day<##>;
 Uses SysUtils, StrUtils, AoCUtils, Classes;
 
 Const
-    IN_FILE = '../Input/<##>.test.txt';
-    //IN_FILE = '../Input/<##>.challenge.txt';
+    IN_FILE = '../Input/day<##>_test.txt';
+    //IN_FILE = '../Input/day<##>_challenge.txt';
 
 Procedure SolvePart1(values: TStringList);
 Var
