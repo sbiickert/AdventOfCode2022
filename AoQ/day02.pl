@@ -10,8 +10,7 @@ use lib $local_lib;
 
 use Modern::Perl 2018;
 use autodie;
-use Data::Dumper;
-#use Storable 'dclone';
+use List::Util qw(sum);
 
 # https://adventofqode.org
 say "Advent of Qode 2022, Day 02: Even If we Answer this Correctly...";
@@ -29,9 +28,6 @@ sub solve {
 		}
 	}
 	
-	my $sum = 0;
-	for (my $i = 0; $i <= $#evens_with_4; $i++) {
-		$sum += $evens_with_4[$i];
-	}
+	my $sum = sum(@evens_with_4);
 	say "AoQ: the sum of even numbers with a 4 in them from 1 to $LIMIT is $sum.";
 }
