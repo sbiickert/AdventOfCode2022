@@ -56,14 +56,11 @@ sub solve_part_two {
 	my $score = 0;
 	
 	for my $move (@moves) {
-		#print "[$move->[0], $move->[1] --> ";
 		if ($move->[1] eq 'X')		{	$move->[1] = $losing_move{$move->[0]}	}
 		elsif ($move->[1] eq 'Y') 	{	$move->[1] = $move->[0]	}
 		elsif ($move->[1] eq 'Z')	{	$move->[1] = $winning_move{$move->[0]}	}
-		#print "$move->[0], $move->[1]] scores ";
 		my $move_score = $score_lookup{$move->[1]};
 		my $result_score = round_score($move);
-		#say "$move_score + $result_score";
 		$score += ($move_score + $result_score);
 	}
 	
