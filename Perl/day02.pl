@@ -46,7 +46,28 @@ sub solve_part_one {
 }
 
 sub solve_part_two {
-	my @input = @_;
+	my @moves = @_;
+	
+	my %score_lookup = ('X' => 1, 'Y' => 2, 'Z' => 3);
+	
+	my %losing_move = ('X' => 'Z', 'Y' => 'X', 'Z' => 'Y');
+	my %winning_move = ('X' => 'Y', 'Y' => 'Z', 'Z' => 'X');
+	
+	my $score = 0;
+	
+	for my $move (@moves) {
+		#print "[$move->[0], $move->[1] --> ";
+		if ($move->[1] eq 'X')		{	$move->[1] = $losing_move{$move->[0]}	}
+		elsif ($move->[1] eq 'Y') 	{	$move->[1] = $move->[0]	}
+		elsif ($move->[1] eq 'Z')	{	$move->[1] = $winning_move{$move->[0]}	}
+		#print "$move->[0], $move->[1]] scores ";
+		my $move_score = $score_lookup{$move->[1]};
+		my $result_score = round_score($move);
+		#say "$move_score + $result_score";
+		$score += ($move_score + $result_score);
+	}
+	
+	say "Part Two: your score is $score.";
 }
 
 sub round_score {
@@ -66,6 +87,7 @@ sub round_score {
 	# Scissors Z beats Paper Y
 	return $move->[0] eq 'Y' ? 6 : 0;
 }
+
 
 sub parse_input {
 	my @lines = @_;
