@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3703D48D293BE99600F8DE08 /* Day03.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3703D48C293BE99600F8DE08 /* Day03.swift */; };
 		3706559F28F9AC4A0051E8C2 /* AoC_2022App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3706559E28F9AC4A0051E8C2 /* AoC_2022App.swift */; };
 		370655A328F9AC4B0051E8C2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 370655A228F9AC4B0051E8C2 /* Assets.xcassets */; };
 		370655A628F9AC4B0051E8C2 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 370655A528F9AC4B0051E8C2 /* Preview Assets.xcassets */; };
@@ -27,6 +28,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3703D48C293BE99600F8DE08 /* Day03.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day03.swift; sourceTree = "<group>"; };
 		3706559B28F9AC4A0051E8C2 /* AoC 2022.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AoC 2022.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3706559E28F9AC4A0051E8C2 /* AoC_2022App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AoC_2022App.swift; sourceTree = "<group>"; };
 		370655A228F9AC4B0051E8C2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -127,6 +129,7 @@
 			children = (
 				B89BA5762939194A00AD9299 /* Day01.swift */,
 				37C2D687293A5E8300873C83 /* Day02.swift */,
+				3703D48C293BE99600F8DE08 /* Day03.swift */,
 			);
 			path = Solutions;
 			sourceTree = "<group>";
@@ -215,6 +218,7 @@
 				B89BA5772939194A00AD9299 /* Day01.swift in Sources */,
 				370655C228F9ACB80051E8C2 /* AoCStrings.swift in Sources */,
 				370655BA28F9AC950051E8C2 /* ContentView.swift in Sources */,
+				3703D48D293BE99600F8DE08 /* Day03.swift in Sources */,
 				37C2D688293A5E8300873C83 /* Day02.swift in Sources */,
 				370655BD28F9AC950051E8C2 /* SolutionRow.swift in Sources */,
 				370655B728F9AC950051E8C2 /* StopwatchUnitView.swift in Sources */,
