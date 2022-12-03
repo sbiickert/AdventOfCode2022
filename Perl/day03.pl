@@ -11,6 +11,7 @@ use lib $local_lib;
 use Modern::Perl 2018;
 use autodie;
 use Data::Dumper;
+use List::Util qw(uniqstr);
 #use Storable 'dclone';
 
 use AOC::Util;
@@ -32,7 +33,7 @@ for (my $p = 0; $p <= $#letters; $p++) {
 }
 
 solve_part_one(@input);
-#solve_part_two(@input);
+solve_part_two(@input);
 
 exit( 0 );
 
@@ -59,15 +60,24 @@ sub solve_part_one {
 	say "Part One: the priority sum of common items is $priority_sum.";
 }
 
-sub sortItems {
-	my $unsorted = shift;
-	my $lower = $unsorted; my $upper = $unsorted;
-	$lower =~ s/[A-Z]//g;
-	$upper =~ s/[a-z]//g;
-	my $sorted = join('', sort( split('', $lower) )) . join('', sort( split('', $upper) ));
-	return $sorted;
-}
-
 sub solve_part_two {
 	my @input = @_;
+	
+	my $priority_sum = 0;
+	for (my $g = 0; $g <= $#input; $g+=3) {
+		my @group = @input[$g..$g+2];
+		my @uniq = uniqstr(split('', $group[0]));
+		foreach my $i (1..2) {
+			my @u = uniqstr(split('', $group[$i]));
+			# intersection of @uniq and @u
+			my %hash;
+			@hash{@u} = (1) x @u;
+			@uniq = grep {  $hash{$_} } @uniq;
+		}
+		# Should only be one letter left in @uniq
+		(scalar(@uniq) == 1) or die "@uniq contained: " . join(', ', @uniq);
+		$priority_sum += $priority->{$uniq[0]};
+	}
+	
+	say "Part Two: the priority sum of group badges $priority_sum.";
 }
