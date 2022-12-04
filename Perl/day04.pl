@@ -11,7 +11,6 @@ use lib $local_lib;
 use Modern::Perl 2018;
 use autodie;
 use Data::Dumper;
-use List::Util qw(min max);
 
 use AOC::Util;
 use AOC::SpatialUtil;
@@ -31,8 +30,7 @@ solve(@assignments);
 
 exit( 0 );
 
-sub solve {
-	my @input = @_;
+sub solve(@input) {
 	my $contain_count = 0;
 	my $overlap_count = 0;
 	
@@ -48,10 +46,6 @@ sub solve {
 	
 	say "Part One: the number of assignments with complete overlap is $contain_count.";
 	say "Part One: the number of assignments with partial overlap is $overlap_count.";
-}
-
-sub solve_part_two {
-	my @input = @_;
 }
 
 sub parseRanges( @lines ) {
