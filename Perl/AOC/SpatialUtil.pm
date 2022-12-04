@@ -20,6 +20,9 @@ our @EXPORT = qw(
 	C3D_create C3D_to_str C3D_from_str 
 	C3D_equal C3D_add C3D_delta C3D_distance C3D_manhattan
 
+	E1D_create E1D_contains E1D_equal E1D_intersect E1D_is_empty
+	E1D_overlaps E1D_to_str E1D_union
+	
 	E2D_create E2D_build E2D_to_str
 	E2D_min E2D_max E2D_width E2D_height E2D_area E2D_all_coords
 	E2D_equal E2D_contains E2D_intersect E2D_union
@@ -117,6 +120,61 @@ sub C3D_distance($c1, $c2) {
 sub C3D_manhattan($c1, $c2) {
 	my $delta = C3D_delta($c1, $c2);
 	return abs($delta->[0]) + abs($delta->[1]) + abs($delta->[2]);
+}
+
+
+# -------------------------------------------------------
+# Extent1D (i.e. a range)
+#
+# Data model: array reference [min,max]
+# -------------------------------------------------------
+sub E1D_create($min, $max) {
+	return [$min, $max];
+}
+
+sub E1D_equal($e1, $e2) {
+	if (E1D_is_empty($e1) && E1D_is_empty($e2)) { return 1; }
+	if (E1D_is_empty($e1) || E1D_is_empty($e2)) { return 0; }
+	return ($e1->[0] == $e2->[0] && $e2->[1] == $e1->[1]);
+}
+
+sub E1D_contains($e1, $e2) {
+	if (E1D_is_empty($e1) || E1D_is_empty($e2)) { return 0; }
+	return ($e1->[0] <= $e2->[0] && $e2->[1] <= $e1->[1]);
+}
+
+sub E1D_overlaps($e1, $e2) {
+	my $intersect = E1D_intersect($e1, $e2);
+	return 0 if E1D_is_empty($intersect);
+	return 1;
+}
+
+sub E1D_union($e1, $e2) {
+	if (E1D_is_empty($e1) || E1D_is_empty($e2)) { return []; }
+	my $min = min($e1->[0], $e2->[0]);
+	my $max = max($e1->[1], $e2->[1]);
+	return [$min, $max];
+}
+
+sub E1D_intersect($e1, $e2) {
+	if (E1D_is_empty($e1) || E1D_is_empty($e2)) { return []; }
+	my $bigmin = max($e1->[0], $e2->[0]);
+	my $smallmax = min($e1->[1], $e2->[1]);
+	if ($bigmin <= $smallmax) {
+		return [$bigmin, $smallmax];
+	}
+	return []; #empty
+}
+
+sub E1D_is_empty($e1d) {
+	return scalar(@{$e1d}) == 0;
+}
+
+sub E1D_to_str($e1d) {
+	if (E1D_is_empty($e1d)) {
+		return '{empty}';
+	}
+	return '{min: ' . $e1d->[0] . ', max: ' . $e1d->[1] . '}';
 }
 
 
