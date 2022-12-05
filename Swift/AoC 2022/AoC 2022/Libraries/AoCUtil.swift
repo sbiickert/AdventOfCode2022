@@ -39,7 +39,7 @@ class AoCUtil {
 
 	public static var solutions: [AoCSolution] {
 		get {
-			return [Day01(), Day02(), Day03()
+			return [Day01(), Day02(), Day03(), Day04()
 				].reversed()
 		}
 	}
