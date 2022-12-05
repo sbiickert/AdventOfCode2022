@@ -28,7 +28,10 @@ my @stacks = parse_stacks(@stack_input);
 my @instructions = parse_instructions(@instr_input);
 
 solve_part_one(\@stacks, \@instructions);
-#solve_part_two(@input);
+
+# Reset stacks
+@stacks = parse_stacks(@stack_input);
+solve_part_two(\@stacks, \@instructions);
 
 exit( 0 );
 
@@ -44,20 +47,37 @@ sub solve_part_one {
 		}
 	}
 	
-	#print Dumper( @stacks );
+	my $result = get_result(@stacks);	
+	say "Part One: the crates at the tops of the stacks are $result.";
+}
+
+sub solve_part_two {
+	my ($s_ref, $i_ref) = @_;
+	my @stacks = @{$s_ref};
+	my @instructions = @{$i_ref};
 	
+	for my $instr (@instructions) {
+		my @crates = ();
+		for my $count (1..$instr->{'num'}) {
+			my $crate = pop(@{$stacks[$instr->{'from'}]});
+			unshift( @crates, $crate) if defined($crate);
+		}
+		push(@{$stacks[$instr->{'to'}]}, @crates);
+	}
+	
+	my $result = get_result(@stacks);	
+	say "Part Two: the crates at the tops of the stacks are $result.";
+}
+
+sub get_result {
+	my @stacks = @_;
 	my $result = "";
 	for my $s (@stacks) {
 		next if !defined($s);
 		my @stack = @{$s};
 		$result .= $stack[$#stack];
 	}
-	
-	say "Part One: the crates at the tops of the stacks are $result.";
-}
-
-sub solve_part_two {
-	my @input = @_;
+	return $result;	
 }
 
 sub parse_stacks {
