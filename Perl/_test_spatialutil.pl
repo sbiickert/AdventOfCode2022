@@ -16,7 +16,8 @@ use Data::Dumper;
 
 test_coord2d();
 #test_coord3d();
-test_extent2d();
+test_extent1d();
+#test_extent2d();
 #test_grid2d();
 
 sub test_coord2d {
@@ -64,6 +65,35 @@ sub test_coord3d {
 	
 	my $clone = C3D_from_str( C3D_to_str($c3d) );
 	say 'The clone ' . C3D_to_str($clone) . ' is the same as the original.';
+}
+
+sub test_extent1d {
+	say "\nTesting Extent1D";
+	my $e1 = E1D_create(0, 10);
+	(E1D_size($e1) == 11) or die;
+	say E1D_to_str($e1);
+	my $e2 = E1D_create(4, 2);
+	($e2->[0] == 2) or die;
+	($e2->[1] == 4) or die;
+	(E1D_contains($e1, $e2)) or die;
+	(!E1D_contains($e2, $e1)) or die;
+	(E1D_overlaps($e1, $e2)) or die;
+	my $e3 = E1D_create(4, 10);
+	(E1D_overlaps($e2, $e3)) or die;
+	(E1D_contains($e1, $e3)) or die;
+	my $e4 = E1D_create(5, 8);
+	(!E1D_overlaps($e2, $e4)) or die;
+	my $e5 = E1D_intersect($e2, $e4);
+	say E1D_to_str($e5);
+	(E1D_is_empty($e5)) or die;
+	my $e6 = E1D_intersect($e2, $e3);
+	say E1D_to_str($e6);
+	(E1D_size($e6) == 1) or die;
+	my $e7 = E1D_union($e2, $e4);
+	say E1D_to_str($e7);
+	(E1D_size($e7) == 7) or die;
+	my $e8 = E1D_create(0, 10);
+	(E1D_equal($e1, $e8)) or die;
 }
 
 sub test_extent2d {
