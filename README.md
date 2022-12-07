@@ -12,3 +12,9 @@ It's that time of year again. I can tell you how it will go:
 But seriously. In 2020 and 2021 I solved in Swift, with 2021's focus being on using Swift Algorithms wherever possible. This year, I'm switching to Perl. In the off-season, I re-solved all of the 2021 puzzles in Perl and was surprised at how much fun I had doing it. Perl is the first language that I mastered (back in the mid-90's) and you never forget your first love.
 
 If I run into problems, especially with complex data structures and/or the lack of debugging tools, I may revert to Swift. I expect that in the early "multiple languages" phase, I will be playing with Swift, Pascal and maybe even PHP.
+
+## One Week Done
+
+So far, AoC 2022 has been a gentler ramp than I was expecting. Day 6 (Tuning Trouble) was finished in 25 minutes, starting at 10 pm. I thought I would just get a head start, but I started and finished. Todays challenge (No Space Left on Device) looked hard, but I surprised myself by being able to build the file system tree in a small amount of time. Once that was done, getting the answers was easy.
+
+Perl is an excellent language for this kind of work, at least until the data structures start getting complicated. Even so, I am completely "warmed up" and array refs and hash refs don't scare me.
