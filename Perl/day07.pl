@@ -27,10 +27,8 @@ my $tree = build_listing(@input);
 my $dirs = [];
 calc_size($tree, $dirs);
 
-#print Dumper($dirs->[2]);
-
 solve_part_one($dirs);
-#solve_part_two(@input);
+solve_part_two($tree, $dirs);
 
 exit( 0 );
 
@@ -46,7 +44,20 @@ sub solve_part_one {
 }
 
 sub solve_part_two {
-	my @input = @_;
+	my ($tree, $dirs) = @_;
+	my $TOTAL_SPACE = 70000000;
+	my $REQ_SPACE = 30000000;
+	my $avail_space = $TOTAL_SPACE - $tree->{'.'};
+	my $minimum_to_clear = $REQ_SPACE - $avail_space;
+	my $smallest = $TOTAL_SPACE; # just a large number
+
+	for my $dir (@{$dirs}) {
+		if ($dir->{'.'} < $smallest && $dir->{'.'} >= $minimum_to_clear) {
+			$smallest = $dir->{'.'};
+		}
+	}
+	
+	say "Part Two: the smallest dir to delete has size $smallest.";
 }
 
 sub build_listing {
