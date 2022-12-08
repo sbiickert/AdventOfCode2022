@@ -344,7 +344,7 @@ sub G2D_create($default, $adj_rule) {
 
 sub G2D_get($g2d, $c2d) {
 	my $key = C2D_to_str($c2d);
-	my $val = $g2d->[0]{$key} || $g2d->[1];
+	my $val = exists( $g2d->[0]{$key} ) ? $g2d->[0]{$key} : $g2d->[1];
 	return $val;
 }
 

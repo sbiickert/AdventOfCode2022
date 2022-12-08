@@ -8,7 +8,7 @@ BEGIN {
 use lib $directory;
 use lib $local_lib;
 
-use Modern::Perl 2018;
+use Modern::Perl 2022;
 use autodie;
 use Data::Dumper;
 #use Storable 'dclone';
