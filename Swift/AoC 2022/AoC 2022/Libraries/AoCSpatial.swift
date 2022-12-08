@@ -105,18 +105,44 @@ struct AoCExtent2D: Hashable {
 	}
 }
 
-enum AoCDirection: String {
+enum AoCDirection: String, CaseIterable {
 	case up = "^"
 	case down = "v"
 	case right = ">"
 	case left = "<"
+	
+	var offset: AoCCoord2D {
+		switch self {
+		case .up:
+			return AoCCoord2D(x: 0, y: -1)
+		case .down:
+			return AoCCoord2D(x: 0, y: 1)
+		case .left:
+			return AoCCoord2D(x: -1, y: 0)
+		case .right:
+			return AoCCoord2D(x: 1, y: 0)
+		}
+	}
 }
 
-enum AoCMapDirection: String {
+enum AoCMapDirection: String, CaseIterable {
 	case north = "N"
 	case south = "S"
 	case east = "E"
 	case west = "W"
+	
+	var offset: AoCCoord2D {
+		switch self {
+		case .north:
+			return AoCCoord2D(x: 0, y: -1)
+		case .south:
+			return AoCCoord2D(x: 0, y: 1)
+		case .west:
+			return AoCCoord2D(x: -1, y: 0)
+		case .east:
+			return AoCCoord2D(x: 1, y: 0)
+		}
+	}
 }
 
 enum AoCAdjacencyRule {
