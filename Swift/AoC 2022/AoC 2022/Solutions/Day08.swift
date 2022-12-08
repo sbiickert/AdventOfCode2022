@@ -29,7 +29,6 @@ class Day08: AoCSolution {
 	
 	private func solvePartOne(_ trees: [[Tree]]) -> Int {
 		let size = trees.count // assuming square
-		//var visibility = [[Bool]](repeating: [Bool](repeating: false, count: size), count: size)
 		
 		var visibleTrees = Set<Tree>();
 		for r in (0..<size) {
@@ -133,5 +132,5 @@ class Day08: AoCSolution {
 
 private struct Tree: Hashable {
 	let height: Int
-	let position: AoCCoord2D
+	let position: AoCCoord2D // Important for hashing into Set
 }
