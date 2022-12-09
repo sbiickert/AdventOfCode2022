@@ -19,7 +19,7 @@ use AOC::SpatialUtil;
 my $INPUT_PATH = '../input';
 #my $INPUT_FILE = 'day09_test.txt';
 my $INPUT_FILE = 'day09_challenge.txt';
-my @input = read_input("$INPUT_PATH/$INPUT_FILE");
+my @input = read_grouped_input("$INPUT_PATH/$INPUT_FILE", 0);
 
 say "Advent of Code 2022, Day 09: Rope Bridge";
 
@@ -29,7 +29,7 @@ our %offsets = ( 'R' => C2D_create(1, 0),
 				 'D' => C2D_create(0, -1) );
 				 
 solve_part_one(@input);
-#solve_part_two(@input);
+solve_part_two(@input);
 
 exit( 0 );
 
@@ -49,11 +49,6 @@ sub solve_part_one {
 		}
 	}
 	
-# 	G2D_set($visited, [0,0], 's');
-# 	G2D_set($visited, $head, 'H');
-# 	G2D_set($visited, $tail, 'T');
-#	G2D_print($visited);
-	
 	my $hist = G2D_histogram($visited);
 	my $places_tail_visited = $hist->{'#'};
 	
@@ -62,7 +57,36 @@ sub solve_part_one {
 
 sub solve_part_two {
 	my @input = @_;
-}
+	my @knots = ();
+	for my $k (1..10) {
+		push(@knots, C2D_create(0,0));
+	}
+	my $visited = G2D_create('.', 'queen');
+	G2D_set($visited, $knots[-1], '#');
+	
+	for my $line (@input) {
+		my ($dir, $count) = split(' ', $line);
+		for my $n (1..$count) {
+			$knots[0] = C2D_add($knots[0], $offsets{$dir});
+			for my $t (1..$#knots) {
+				$knots[$t] = follow($knots[$t-1], $knots[$t]);
+			}
+			G2D_set($visited, $knots[-1], '#');
+		}
+	}
+
+	my $hist = G2D_histogram($visited);
+	
+# 	G2D_set($visited, [0,0], 's');
+# 	G2D_set($visited, $knots[0], 'H');
+# 	for my $t (1..$#knots) {
+# 		G2D_set($visited, $knots[$t], $t);
+# 	}
+# 	G2D_print($visited);
+	
+	my $places_tail_visited = $hist->{'#'};
+	
+	say "Part One: tail visited $places_tail_visited places.";}
 
 sub follow {
 	my ($head, $tail) = @_;
