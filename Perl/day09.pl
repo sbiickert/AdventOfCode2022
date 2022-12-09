@@ -28,37 +28,18 @@ our %offsets = ( 'R' => C2D_create(1, 0),
 				 'U' => C2D_create(0, 1),
 				 'D' => C2D_create(0, -1) );
 				 
-solve_part_one(@input);
-solve_part_two(@input);
+my $result1 = solve(2, @input);
+say "Part One: tail visited $result1 places.";
+
+my $result2 = solve(10, @input);
+say "Part Two: tail visited $result2 places.";
 
 exit( 0 );
 
-sub solve_part_one {
-	my @input = @_;
-	my $head = C2D_create(0,0);
-	my $tail = C2D_create(0,0);
-	my $visited = G2D_create('.', 'queen');
-	G2D_set($visited, $tail, '#');
-	
-	for my $line (@input) {
-		my ($dir, $count) = split(' ', $line);
-		for my $n (1..$count) {
-			$head = C2D_add($head, $offsets{$dir});
-			$tail = follow($head, $tail);
-			G2D_set($visited, $tail, '#');
-		}
-	}
-	
-	my $hist = G2D_histogram($visited);
-	my $places_tail_visited = $hist->{'#'};
-	
-	say "Part One: tail visited $places_tail_visited places.";
-}
-
-sub solve_part_two {
-	my @input = @_;
+sub solve {
+	my ($knot_count, @input) = @_;
 	my @knots = ();
-	for my $k (1..10) {
+	for my $k (1..$knot_count) {
 		push(@knots, C2D_create(0,0));
 	}
 	my $visited = G2D_create('.', 'queen');
@@ -84,9 +65,8 @@ sub solve_part_two {
 # 	}
 # 	G2D_print($visited);
 	
-	my $places_tail_visited = $hist->{'#'};
-	
-	say "Part One: tail visited $places_tail_visited places.";}
+	return $hist->{'#'};
+}
 
 sub follow {
 	my ($head, $tail) = @_;
