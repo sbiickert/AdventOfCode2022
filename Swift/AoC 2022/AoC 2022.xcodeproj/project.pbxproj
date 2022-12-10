@@ -23,6 +23,7 @@
 		370655C328F9ACB80051E8C2 /* AoCSpatial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370655C028F9ACB80051E8C2 /* AoCSpatial.swift */; };
 		370655C428F9ACB80051E8C2 /* AoCUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370655C128F9ACB80051E8C2 /* AoCUtil.swift */; };
 		370C391728F9C4B400ED1FDC /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 370C391628F9C4B400ED1FDC /* Algorithms */; };
+		3719BAC629443CD000C52ECA /* Day09.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3719BAC529443CD000C52ECA /* Day09.swift */; };
 		3723ABE629425518008AF263 /* Day08.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3723ABE529425518008AF263 /* Day08.swift */; };
 		37470396293D7EB700304141 /* Day04.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37470395293D7EB700304141 /* Day04.swift */; };
 		375CEF65293E56FF002C680A /* Day05.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375CEF64293E56FF002C680A /* Day05.swift */; };
@@ -54,6 +55,7 @@
 		370655BF28F9ACB80051E8C2 /* AoCStrings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AoCStrings.swift; sourceTree = "<group>"; };
 		370655C028F9ACB80051E8C2 /* AoCSpatial.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AoCSpatial.swift; sourceTree = "<group>"; };
 		370655C128F9ACB80051E8C2 /* AoCUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AoCUtil.swift; sourceTree = "<group>"; };
+		3719BAC529443CD000C52ECA /* Day09.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day09.swift; sourceTree = "<group>"; };
 		3723ABE529425518008AF263 /* Day08.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day08.swift; sourceTree = "<group>"; };
 		37470395293D7EB700304141 /* Day04.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day04.swift; sourceTree = "<group>"; };
 		375CEF64293E56FF002C680A /* Day05.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day05.swift; sourceTree = "<group>"; };
@@ -155,6 +157,7 @@
 				3793FA22293FB8D0003B3C1A /* Day06.swift */,
 				37CA9D0729410166008D1614 /* Day07.swift */,
 				3723ABE529425518008AF263 /* Day08.swift */,
+				3719BAC529443CD000C52ECA /* Day09.swift */,
 			);
 			path = Solutions;
 			sourceTree = "<group>";
@@ -255,6 +258,7 @@
 				370655B628F9AC950051E8C2 /* SolutionList.swift in Sources */,
 				37CA9D0829410166008D1614 /* Day07.swift in Sources */,
 				B89BA5772939194A00AD9299 /* Day01.swift in Sources */,
+				3719BAC629443CD000C52ECA /* Day09.swift in Sources */,
 				3723ABE629425518008AF263 /* Day08.swift in Sources */,
 				370655C228F9ACB80051E8C2 /* AoCStrings.swift in Sources */,
 				370655BA28F9AC950051E8C2 /* ContentView.swift in Sources */,

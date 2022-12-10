@@ -26,6 +26,11 @@ struct AoCCoord2D: Hashable {
 		}
 		return c0.y < c1.y
 	}
+	
+	func distance(to other: AoCCoord2D) -> Double {
+		let delta = self - other
+		return sqrt(Double(delta.x * delta.x + delta.y * delta.y))
+	}
 
 	func manhattanDistance(to other: AoCCoord2D) -> Int {
 		return abs(self.x - other.x) + abs(self.y - other.y)
