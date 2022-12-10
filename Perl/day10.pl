@@ -26,7 +26,7 @@ say "Advent of Code 2022, Day 10: Cathode Ray Tube";
 our @program = parse_operations(@input);
 
 solve_part_one();
-#solve_part_two(@input);
+solve_part_two(@program);
 
 exit( 0 );
 
@@ -42,19 +42,55 @@ sub solve_part_one {
 		elsif ($operation->{'op'} eq 'addx') {
 			$cycle++;
 			#say "After cycle $cycle, X is $x " . $cycle * $x;
-			if (($cycle + 20) % 40 == 0) { $sig_strength += $cycle * $x; say $sig_strength; }
+			if (($cycle + 20) % 40 == 0) { $sig_strength += $cycle * $x; }
 			$x += $operation->{'val'};
 			$cycle++
 		}
 		#say "After cycle $cycle, X is $x " . $cycle * $x;
-		if (($cycle + 20) % 40 == 0) { $sig_strength += $cycle * $x; say $sig_strength; }
+		if (($cycle + 20) % 40 == 0) { $sig_strength += $cycle * $x; }
 	}
 	
 	say "Part One: signal strength is $sig_strength.";
 }
 
 sub solve_part_two {
-	my @input = @_;
+	my @program = @_;
+	my $cycle = 1;
+	my $x = 1;
+	my $op = 0;
+	my $next_op_in = 0;
+	my @pixels = ();
+
+	for my $cycle (1..240) {
+		if (!$op) {
+			$op = shift(@program);
+			if ($op->{'op'} eq 'noop') {
+				$next_op_in = 1;
+			}
+			elsif ($op->{'op'} eq 'addx') {
+				$next_op_in = 2;
+			}
+		}
+		
+		# Draw
+		my $col = ($cycle-1) % 40;
+		my $char = (abs($x - $col) <= 1) ? '#' : '.';
+		push(@pixels, $char);
+		
+		if ($col == 39) {
+			say join('', @pixels);
+			@pixels = ();
+		}
+		
+		if (--$next_op_in == 0) {
+			if ($op->{'op'} eq 'addx') {
+				#print "add $op->{'val'} to $x: ";
+				$x += $op->{'val'};
+				#say $x;
+			}
+			$op = 0;
+		}
+	}
 }
 
 sub parse_operations {
