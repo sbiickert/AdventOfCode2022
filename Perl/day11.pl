@@ -26,25 +26,37 @@ say "Advent of Code 2022, Day 11: Monkey in the Middle";
 use integer;
 
 my @monkeys = parse_monkeys(@input);
-solve_part_one(@monkeys);
+my $mb = solve(20, 1, @monkeys);
+say "Part One: the monkey business is $mb.";
 
 @monkeys = parse_monkeys(@input); # Ensure at the starting state
-solve_part_two(@monkeys);
+$mb = solve(10000, 0, @monkeys);
+say "Part Two: the monkey business is $mb.";
 
 exit( 0 );
 
-sub solve_part_one {
-	my @monkeys = @_;
+sub solve {
+	my ($num_rounds, $has_relief, @monkeys) = @_;
+	
+	my $lcm = 1;
+	for my $monkey (@monkeys) {
+		$lcm *= $monkey->{'test'};
+	}
+	#say "LCM is $lcm";
 	
 	my $round = 1;
-	while ($round <= 20) {
+	while ($round <= $num_rounds) {
 		for my $monkey (@monkeys) {
 			while (scalar @{$monkey->{'items'}} > 0) {
 				$monkey->{'count'} += 1;
+				
 				my $worry = shift(@{$monkey->{'items'}});
 				#say "Item with worry $worry.";
-				my $val = $monkey->{'val'};
-				$val = $worry if $val eq 'old';
+				
+				my $val;
+				if ($monkey->{'val'} eq 'old')	{ $val = $worry; }
+				else 							{ $val = int($monkey->{'val'}); }
+				
 				if ($monkey->{'op'} eq '+') {
 					$worry += $val;
 				}
@@ -52,9 +64,16 @@ sub solve_part_one {
 					$worry *= $val;
 				}
 				#say "Worry increased to $worry.";
+				
 				# Relief
-				$worry = int($worry / 3);
+				if ($has_relief) {
+					$worry = int($worry / 3);
+				}
+				else {
+					$worry = $worry % $lcm;
+				}
 				#say "Relief: $worry.";
+				
 				if ($worry % $monkey->{'test'} == 0) {
 					#say "Throwing to monkey $monkey->{'if'}.";
 					push(@{$monkeys[$monkey->{'if'}]{'items'}}, $worry);
@@ -65,12 +84,6 @@ sub solve_part_one {
 				}
 			}
 		}
-		
-# 		say "After round $round:";
-# 		for (my $m = 0; $m <= $#monkeys; $m++) {
-# 			my $monkey = $monkeys[$m];
-# 			say "Monkey $m is holding: " . join(', ', @{$monkey->{'items'}});
-# 		}		
 		$round++;
 	}
 	
@@ -82,71 +95,7 @@ sub solve_part_one {
 	@counts = sort {$b <=> $a} @counts;
 	
 	my $mb = $counts[0] * $counts[1];
-	say "Part One: the monkey business is $mb.";
-}
-
-sub solve_part_two {
-	my @monkeys = @_;
-	
-	my $lcm = 1;
-	for my $monkey (@monkeys) {
-		$lcm *= $monkey->{'test'};
-	}
-	say "LCM is $lcm";
-	
-	my $round = 1;
-	while ($round <= 10000) {
-		for my $monkey (@monkeys) {
-			while (scalar @{$monkey->{'items'}} > 0) {
-				$monkey->{'count'} += 1;
-				my $worry = shift(@{$monkey->{'items'}});
-				#say "Item with worry $worry.";
-				
-				my $val;
-				if ($monkey->{'val'} eq 'old')	{ $val = $worry; }
-				else 							{ $val = int($monkey->{'val'}); }
-
-				if ($monkey->{'op'} eq '+') {
-					$worry += $val;
-				}
-				else {
-					$worry *= $val;
-				}
-				#say "Worry increased to $worry.";
-				
-				# Modified Relief
-				$worry = $worry % $lcm;
-				
-				if ($worry % $monkey->{'test'} == 0) {
-					#say "% $monkey->{'id'} throwing to $monkey->{'if'}.";
-					push(@{$monkeys[$monkey->{'if'}]{'items'}}, $worry);
-				}
-				else {
-					#say "$monkey->{'id'} throwing to $monkey->{'else'}.";
-					push(@{$monkeys[$monkey->{'else'}]{'items'}}, $worry);
-				}
-			}
-		}
-		
-# 		if ($round == 20 || $round % 1000 == 0) {
-# 			say "After round $round:";
-# 			for (my $m = 0; $m <= $#monkeys; $m++) {
-# 				my $monkey = $monkeys[$m];
-# 				say "Monkey $m inspected items $monkey->{'count'} times.";
-# 			}
-# 			#print Dumper(@monkeys);
-# 		}	
-		$round++;
-	}
-	
-	my @counts = ();
-	for my $monkey (@monkeys) {
-		push(@counts, $monkey->{'count'});
-	}
-	@counts = sort {$b <=> $a} @counts;
-	
-	my $mb = $counts[0] * $counts[1];
-	say "Part Two: the monkey business is $mb.";
+	return $mb;
 }
 
 sub parse_monkeys {
