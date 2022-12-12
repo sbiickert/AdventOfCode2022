@@ -1,0 +1,120 @@
+on 1x1
+rotate column x=0 by 4
+on 1x1
+rotate column x=0 by 1
+rotate row y=1 by 1
+rotate row y=5 by 1
+on 1x1
+rotate column x=0 by 3
+on 1x1
+rotate column x=0 by 2
+rotate row y=1 by 1
+rotate row y=2 by 1
+rotate row y=5 by 1
+on 1x1
+rotate column x=0 by 2
+on 1x1
+rotate column x=0 by 3
+rotate row y=1 by 1
+rotate row y=2 by 1
+rotate row y=3 by 1
+rotate row y=5 by 1
+on 1x1
+rotate column x=0 by 2
+on 1x1
+rotate column x=0 by 3
+rotate row y=1 by 1
+rotate row y=2 by 1
+rotate row y=3 by 1
+rotate row y=5 by 1
+on 1x1
+rotate column x=0 by 1
+on 1x1
+rotate column x=0 by 4
+rotate row y=1 by 1
+rotate row y=2 by 1
+rotate row y=3 by 1
+rotate row y=4 by 1
+rotate row y=5 by 1
+on 1x1
+rotate column x=0 by 4
+on 1x1
+rotate column x=0 by 1
+rotate row y=1 by 4
+rotate row y=2 by 4
+rotate row y=3 by 4
+rotate row y=4 by 4
+rotate row y=5 by 4
+on 1x5
+rotate column x=0 by 1
+rotate row y=1 by 7
+rotate row y=2 by 7
+rotate row y=3 by 1
+rotate row y=4 by 7
+rotate row y=5 by 7
+on 1x1
+rotate column x=0 by 3
+rotate row y=3 by 1
+on 1x1
+rotate column x=0 by 3
+rotate row y=3 by 1
+on 1x1
+rotate column x=0 by 3
+rotate row y=3 by 1
+on 1x1
+rotate column x=0 by 3
+rotate row y=3 by 1
+on 1x1
+rotate column x=0 by 3
+rotate row y=3 by 1
+on 1x1
+rotate column x=0 by 3
+rotate row y=3 by 2
+rotate row y=4 by 1
+rotate row y=5 by 1
+on 1x2
+rotate column x=0 by 1
+rotate row y=1 by 4
+rotate row y=2 by 6
+rotate row y=3 by 7
+rotate row y=4 by 7
+rotate row y=5 by 7
+on 1x1
+rotate column x=0 by 5
+rotate row y=5 by 5
+on 1x5
+rotate column x=0 by 1
+rotate row y=1 by 8
+rotate row y=2 by 6
+rotate row y=3 by 4
+rotate row y=4 by 4
+rotate row y=5 by 1
+on 1x5
+rotate column x=0 by 1
+rotate row y=1 by 5
+rotate row y=2 by 5
+rotate row y=3 by 5
+rotate row y=4 by 5
+on 1x4
+rotate column x=0 by 1
+rotate row y=1 by 1
+rotate row y=2 by 1
+rotate row y=3 by 1
+rotate row y=4 by 1
+on 1x1
+rotate column x=0 by 5 
+rotate row y=5 by 1
+on 1x1
+rotate column x=0 by 5 
+rotate row y=5 by 1
+on 1x1
+rotate column x=0 by 5 
+rotate row y=5 by 2
+on 4x1
+rotate row y=0 by 11
+on 6x1
+rotate row y=0 by 10
+on 7x1
+rotate row y=0 by 7
+on 4x1
+rotate row y=0 by 2
