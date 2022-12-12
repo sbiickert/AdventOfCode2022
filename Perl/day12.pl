@@ -11,7 +11,10 @@ use lib $local_lib;
 use Modern::Perl 2022;
 use autodie;
 use Data::Dumper;
-use Storable 'dclone';
+# use Storable 'dclone';
+# use Carp qw(confess cluck);
+# $SIG{__WARN__} = 'cluck';
+# $SIG{__DIE__} = 'confess';
 
 use AOC::Util;
 use AOC::SpatialUtil;
@@ -25,26 +28,34 @@ say "Advent of Code 2022, Day 12: Hill Climbing Algorithm";
 
 our ($elev, $start, $end) = parse_elevation_map(@input);
 
-solve_part_one();
-#solve_part_two(@input);
+my $cost_part1 = find_path($start);
+say "Part One: cost to reach E was " . $cost_part1;
+
+my @lowest = G2D_coords_with_value($elev, 1); # 1 is 'a'
+my @costs_part2 = ();
+for my $low (@lowest) {
+	my $cost = find_path($low);
+	if ($cost > 0) { # If a path can't be found, -1 is returned
+		push(@costs_part2, $cost);
+	}
+}
+@costs_part2 = sort {$a <=> $b} @costs_part2;
+say "Part Two: lowest cost to reach E was " . $costs_part2[0];
 
 exit( 0 );
 
-sub solve_part_one {
+sub find_path {
+	my $starting_point = shift;
+	#say "find_path starting at " . C2D_to_str($starting_point);
 	my $cost = G2D_create('100000000', 'rook');
-	my $pos = $start;
+	my $pos = $starting_point;
 	my @to_visit = ();
-	my $v_map = dclone($elev);
 	
 	G2D_set($cost, $pos, 0);
-	my $visit_count = 0;
+	
 	while (G2D_get($cost, $end) eq '100000000') {
-		say C2D_to_str($pos);
-		G2D_set($v_map, $pos, '#');
-		if (++$visit_count % 100 == 0) {
-			say $visit_count;
-			#G2D_print($v_map);
-			#die;
+		if (!defined($pos)) {
+			return -1;
 		}
 		
 		my @neighbors = G2D_neighbors($cost, $pos);
@@ -57,7 +68,6 @@ sub solve_part_one {
 			if ($n_cost <= $cost_at_pos+1 || $n_elev - $elev_at_pos > 1) {
 				next;
 			}
-			#say "Cost at " . C2D_to_str($n) . " was $n_cost, setting to " . ($cost_at_pos+1);
 			G2D_set($cost, $n, $cost_at_pos+1);
 			push(@to_visit, $n);
 		}
@@ -67,12 +77,7 @@ sub solve_part_one {
 		
 		$pos = pop @to_visit;
 	}
-	
-	say "Part One: cost to reach E was " . G2D_get($cost, $end);
-}
-
-sub solve_part_two {
-	my @input = @_;
+	return G2D_get($cost, $end);
 }
 
 sub parse_elevation_map {
