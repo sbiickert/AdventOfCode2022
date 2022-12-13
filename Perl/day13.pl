@@ -12,6 +12,7 @@ use Modern::Perl 2022;
 use autodie;
 use Data::Dumper;
 use List::Util qw(max);
+use List::MoreUtils qw(first_index);
 #use Storable 'dclone';
 
 use AOC::Util;
@@ -25,7 +26,10 @@ my @input = read_grouped_input("$INPUT_PATH/$INPUT_FILE");
 say "Advent of Code 2022, Day 13: Distress Signal";
 
 solve_part_one(@input);
-#solve_part_two(@input);
+
+# Faster to flatten the input by reading it again
+@input = read_input("$INPUT_PATH/$INPUT_FILE", 1);
+solve_part_two(@input);
 
 exit( 0 );
 
@@ -45,6 +49,18 @@ sub solve_part_one {
 	}
 	
 	say "Part One: the sum of indexes is $sum.";
+}
+
+sub solve_part_two {
+	my @input = @_;
+	push(@input, '[[2]]');
+	push(@input, '[[6]]');
+	my @sorted = sort {compare(eval($a), eval($b))} @input;
+	my $index1 = (first_index { $_ eq '[[2]]' } @sorted) + 1;
+	my $index2 = (first_index { $_ eq '[[6]]' } @sorted) + 1;
+	my $product = $index1 * $index2;
+	
+	say "Part Two: the product of the two indices is $product.";
 }
 
 sub compare {
@@ -71,8 +87,4 @@ sub compare {
 		return $left <=> $right;
 	}
 	return 0;
-}
-
-sub solve_part_two {
-	my @input = @_;
 }
