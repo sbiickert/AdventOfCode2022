@@ -165,8 +165,12 @@ class AoCGrid2D {
 		self.defaultValue = defaultValue
 	}
 	
+	var _extent: AoCExtent2D?
 	var extent: AoCExtent2D {
-		return AoCExtent2D.build(from: [AoCCoord2D](_data.keys))
+		if _extent == nil {
+			_extent = AoCExtent2D.build(from: [AoCCoord2D](_data.keys))
+		}
+		return _extent!
 	}
 
 	func value(at coord: AoCCoord2D) -> String {
@@ -178,6 +182,7 @@ class AoCGrid2D {
 	
 	func setValue(_ v: String, at coord: AoCCoord2D) {
 		_data[coord] = v
+		if extent.contains(coord) == false { _extent = nil }
 	}
 	
 	var coords: [AoCCoord2D] {
