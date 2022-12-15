@@ -21,7 +21,7 @@ our @EXPORT = qw(
 	C3D_equal C3D_add C3D_delta C3D_distance C3D_manhattan
 
 	E1D_create E1D_contains E1D_equal E1D_intersect E1D_is_empty
-	E1D_overlaps E1D_to_str E1D_union E1D_size
+	E1D_overlaps E1D_to_str E1D_union E1D_size E1D_contains_value
 	
 	E2D_create E2D_build E2D_to_str
 	E2D_min E2D_max E2D_width E2D_height E2D_area E2D_all_coords
@@ -146,6 +146,11 @@ sub E1D_size($e1d) {
 sub E1D_contains($e1, $e2) {
 	if (E1D_is_empty($e1) || E1D_is_empty($e2)) { return 0; }
 	return ($e1->[0] <= $e2->[0] && $e2->[1] <= $e1->[1]);
+}
+
+sub E1D_contains_value($e1, $v) {
+	if (E1D_is_empty($e1)) { return 0; }
+	return ($e1->[0] <= $v && $v <= $e1->[1]);
 }
 
 sub E1D_overlaps($e1, $e2) {
