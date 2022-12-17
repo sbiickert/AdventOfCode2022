@@ -27,7 +27,7 @@ our @EXPORT = qw(
 	E2D_min E2D_max E2D_width E2D_height E2D_area E2D_all_coords
 	E2D_equal E2D_contains E2D_intersect E2D_union
 
-	G2D_create G2D_get G2D_set G2D_extent 
+	G2D_create G2D_get G2D_set G2D_clear G2D_extent 
 	G2D_coords G2D_coords_with_value G2D_histogram 
 	G2D_offsets G2D_neighbors G2D_print);
 
@@ -357,6 +357,11 @@ sub G2D_set($g2d, $c2d, $val) {
 	my $key = C2D_to_str($c2d);
 	$g2d->[0]{$key} = $val;
 	E2D_expand_to_fit( G2D_extent($g2d), $c2d );
+}
+
+sub G2D_clear($g2d, $c2d) {
+	my $key = C2D_to_str($c2d);
+	delete $g2d->[0]{$key};
 }
 
 sub G2D_extent($g2d) {
