@@ -413,14 +413,27 @@ sub G2D_neighbors($g2d, $c2d) {
 	return @neighbors;
 }
 
-sub G2D_print($g2d) {
+sub G2D_print($g2d, $invert_y=0) {
 	my $e2d = G2D_extent($g2d);
-	for (my $y = $e2d->[1]; $y <= $e2d->[3]; $y++) {
-		my @row = ();
-		for (my $x = $e2d->[0]; $x <= $e2d->[2]; $x++) {
-			push( @row, G2D_get($g2d, C2D_create($x, $y)) );
+	my $ymin = $e2d->[1];
+	my $ymax = $e2d->[3];
+	if ($invert_y) {
+		for (my $y = $ymax; $y >= $ymin; $y--) {
+			my @row = ();
+			for (my $x = $e2d->[0]; $x <= $e2d->[2]; $x++) {
+				push( @row, G2D_get($g2d, C2D_create($x, $y)) );
+			}
+			say join(' ', @row);
 		}
-		say join(' ', @row);
+	}
+	else {
+		for (my $y = $ymin; $y <= $ymax; $y++) {
+			my @row = ();
+			for (my $x = $e2d->[0]; $x <= $e2d->[2]; $x++) {
+				push( @row, G2D_get($g2d, C2D_create($x, $y)) );
+			}
+			say join(' ', @row);
+		}
 	}
 }
 
