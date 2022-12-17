@@ -34,6 +34,7 @@
 		3793FA28293FB9BE003B3C1A /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 3793FA27293FB9BE003B3C1A /* DequeModule */; };
 		3793FA2A293FB9BE003B3C1A /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 3793FA29293FB9BE003B3C1A /* OrderedCollections */; };
 		37C2D688293A5E8300873C83 /* Day02.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37C2D687293A5E8300873C83 /* Day02.swift */; };
+		37C94CA7294D81EE0013F634 /* Day16.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37C94CA6294D81EE0013F634 /* Day16.swift */; };
 		37CA9D0829410166008D1614 /* Day07.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37CA9D0729410166008D1614 /* Day07.swift */; };
 		B89BA5772939194A00AD9299 /* Day01.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89BA5762939194A00AD9299 /* Day01.swift */; };
 /* End PBXBuildFile section */
@@ -64,6 +65,7 @@
 		375CEF67293E5D74002C680A /* libswiftRegexBuilder.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libswiftRegexBuilder.tbd; path = usr/lib/swift/libswiftRegexBuilder.tbd; sourceTree = SDKROOT; };
 		3793FA22293FB8D0003B3C1A /* Day06.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day06.swift; sourceTree = "<group>"; };
 		37C2D687293A5E8300873C83 /* Day02.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day02.swift; sourceTree = "<group>"; };
+		37C94CA6294D81EE0013F634 /* Day16.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day16.swift; sourceTree = "<group>"; };
 		37CA9D0729410166008D1614 /* Day07.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day07.swift; sourceTree = "<group>"; };
 		B89BA5762939194A00AD9299 /* Day01.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day01.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -161,6 +163,7 @@
 				3723ABE529425518008AF263 /* Day08.swift */,
 				3719BAC529443CD000C52ECA /* Day09.swift */,
 				371591E3294A637B009F2CED /* Day14.swift */,
+				37C94CA6294D81EE0013F634 /* Day16.swift */,
 			);
 			path = Solutions;
 			sourceTree = "<group>";
@@ -270,6 +273,7 @@
 				375CEF65293E56FF002C680A /* Day05.swift in Sources */,
 				3703D48D293BE99600F8DE08 /* Day03.swift in Sources */,
 				37C2D688293A5E8300873C83 /* Day02.swift in Sources */,
+				37C94CA7294D81EE0013F634 /* Day16.swift in Sources */,
 				370655BD28F9AC950051E8C2 /* SolutionRow.swift in Sources */,
 				370655B728F9AC950051E8C2 /* StopwatchUnitView.swift in Sources */,
 				3706559F28F9AC4A0051E8C2 /* AoC_2022App.swift in Sources */,
