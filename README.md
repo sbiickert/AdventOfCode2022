@@ -18,3 +18,7 @@ If I run into problems, especially with complex data structures and/or the lack 
 So far, AoC 2022 has been a gentler ramp than I was expecting. Day 6 (Tuning Trouble) was finished in 25 minutes, starting at 10 pm. I thought I would just get a head start, but I started and finished. Todays challenge (No Space Left on Device) looked hard, but I surprised myself by being able to build the file system tree in a small amount of time. Once that was done, getting the answers was easy.
 
 Perl is an excellent language for this kind of work, at least until the data structures start getting complicated. Even so, I am completely "warmed up" and array refs and hash refs don't scare me.
+
+## Difficulty Spike
+
+We've hit the spike, as of Day 16. I barely finished part 1 with code that makes me ill to read it. I will return to this one and approach it again in Swift. Day 17 (Tetris) was easier and a fair bit of fun but it was still in the upper echelons of difficulty. Thankfully Day 18 was a bit of a reprieve, but it still was a 3D challenge.
