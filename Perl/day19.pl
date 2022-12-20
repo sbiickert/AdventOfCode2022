@@ -25,17 +25,21 @@ my @input = read_input("$INPUT_PATH/$INPUT_FILE");
 say "Advent of Code 2022, Day 19: Not Enough Minerals";
 
 our @blueprints = parse_blueprints(@input);
-our @RT = ('ore', 'clay', 'obsidian', 'geode');
+our @RT = ('geode', 'obsidian', 'clay', 'ore');
 
-solve_part_one();
-#solve_part_two(@input);
+#solve_part_one();
+solve_part_two();
 
 exit( 0 );
 
 sub solve_part_one {
 	my %quality = ();
 	for my $bp (@blueprints) {
-		$quality{$bp->{'id'}} = eval_blueprint($bp);#  if $bp->{'id'} == 1;
+		#if ($bp->{'id'} == 1) {
+			my $geode_count = eval_blueprint($bp, 24);
+			$quality{$bp->{'id'}} = $bp->{'id'} * $geode_count;
+			say "Q level of blueprint $bp->{'id'} is $quality{$bp->{'id'}}.";
+		#}
 	}
 	
 	my $sum = 0;
@@ -47,15 +51,25 @@ sub solve_part_one {
 
 
 sub solve_part_two {
-	my @input = @_;
+	my %count = ();
+	for my $bp (@blueprints) {
+		$count{$bp->{'id'}} = eval_blueprint($bp, 32) if $bp->{'id'} <= 3;
+	}
+	
+	my $score = 1;
+	for my $id (keys %count) {
+		$score *= $count{$id};
+	}
+	say "Part Two: the product of geode counts is $score.";
 }
 
 our %cache;
 our @cache_keys;
+our $best_geode_count;
 
 sub eval_blueprint {
-	my $bp = shift;
-	my %args = ('build' => '', 'bp' => $bp, 'time' => 24);
+	my ($bp, $time) = @_;
+	my %args = ('build' => '', 'bp' => $bp, 'time' => $time);
 	for my $r_type (@RT) {
 		$args{$r_type} = 0;
 		$args{"r:$r_type"} = 0;
@@ -64,12 +78,12 @@ sub eval_blueprint {
 	
 	%cache = ();
 	@cache_keys = grep { !/bp/ } sort keys %args;
+	$best_geode_count = 0;
 	
 	my $geode_count = process(%args);
 	
-	my $quality_level = $bp->{'id'} * $geode_count;
-	say "Quality Level for $bp->{'id'} is $quality_level.";
-	return $quality_level;
+	say "Geodes produced in $time by blueprint $bp->{'id'} is $geode_count.";
+	return $geode_count;
 }
 
 sub process {
@@ -78,6 +92,10 @@ sub process {
 	
 	if ($args{'time'} < 0) {
 		#say join('|', map { $args{$_} } @cache_keys);
+		if ($args{'geode'} > $best_geode_count) {
+			$best_geode_count = $args{'geode'};
+			say "Best is $best_geode_count.";
+		}
 		return $args{'geode'};
 	}
 	
@@ -88,6 +106,13 @@ sub process {
 		return $cache{$cache_key};
 	}
 	
+	# Optimization: can this branch ever exceed the best_geode_count?
+	my $t = $args{'time'} + 1;
+	my $theoretical_best = $args{'geode'} + ($args{'r:geode'} * $t) + (($t * ($t - 1)) / 2);
+	if ($theoretical_best < $best_geode_count) {
+		return $args{'geode'};
+	}
+	
 	# Would theoretically start the build here, but since it
 	# comes online _after_ production, build happens after.
 	
@@ -96,9 +121,6 @@ sub process {
 		my $robot_type = "r:$r_type";
 		for my $i (1..$args{$robot_type}) {
 			$args{$r_type}++;
-# 			if ($r_type eq 'geode') {
-# 				say "Cracked a geode with $args{'time'} remaining.";
-# 			}
 		}
 	}
 	
@@ -126,7 +148,7 @@ sub process {
 	my $max_geodes = max(@results);
 	
 	# write cache here
-	if ($args{'time'} > 0) { # limiting cache size, was hitting 16 GB.
+	if ($args{'time'} > 1) { # limiting cache size, was hitting 16 GB.
 		$cache{$cache_key} = $max_geodes;
 	}
 	
@@ -135,11 +157,11 @@ sub process {
 
 sub what_can_i_build {
 	my $args_ref = shift;
-	
-	my @buildable = (''); # not building is always an option
-	
+		
 	# No point in building robot, won't produce anything before end
-	return @buildable if $args_ref->{'time'} == 0;
+	return ('') if $args_ref->{'time'} == 0;
+
+	my @buildable = ('');
 	
 	for my $r_type (@RT) {
 		my $robot_type = "r:$r_type";
@@ -163,7 +185,11 @@ sub what_can_i_build {
 	# There is no point to building anything except a geode cracker
 	if ($args_ref->{'time'} == 1) {
 		@buildable = grep { /geode/ } @buildable;
-		unshift( @buildable, '' ); 
+	}
+	
+	if (scalar(@buildable) == 0) {
+		# Do nothing as a last resort
+		push(@buildable, '');
 	}
 	
 	return @buildable;
