@@ -23,12 +23,45 @@ my @input = read_input("$INPUT_PATH/$INPUT_FILE");
 
 say "Advent of Code 2022, Day 20: Grove Positioning System";
 
-solve_part_one(@input);
-#solve_part_two(@input);
+my @linked_list = build_dll(@input);
+
+my $p1 = solve(\@linked_list, 1);
+say "Part One: the sum of the coord values is $p1.";
+
+@linked_list = build_dll(@input);
+for my $i (0..$#linked_list) {
+	$linked_list[$i]{'value'} *= 811589153;
+}
+my $p2 = solve(\@linked_list, 10);
+say "Part Two: the sum of the coord values is $p2.";
 
 exit( 0 );
 
-sub solve_part_one {
+sub solve {
+	my ($dll, $mix_count) = @_;
+	
+	my $zero;
+	for my $rep (1..$mix_count) {
+		$zero = mix_dll($dll);
+	}
+	
+	my @coord = ();
+	my $ptr = $zero;
+	
+	for my $i (1..3000) {
+		$ptr = $ptr->{'next'};
+		if ($i % 1000 == 0) { push(@coord, $ptr->{'value'}); }
+	}
+	
+	say join(', ', @coord);
+	my $sum = 0;
+	for my $c (@coord) {
+		$sum += $c;
+	}
+	return $sum;
+}
+
+sub build_dll {
 	my @input = @_;
 	my @dll = ();
 	for my $line (@input) {
@@ -42,43 +75,20 @@ sub solve_part_one {
 		$dll[$i]{'prev'} = $dll[$prev];
 		$dll[$i]{'next'} = $dll[$next];
 	}
-	my $zero = mix_dll(\@dll);
-	
-	my @coord = ();
-	my $ptr = $zero;
-	for my $i (1..3000) {
-		$ptr = $ptr->{'next'};
-		if ($i % 1000 == 0) { push(@coord, $ptr->{'value'}); }
-	}
-	
-	say join(', ', @coord);
-	my $sum = 0;
-	for my $c (@coord) {
-		$sum += $c;
-	}
-	
-	say "Part One: the sum of the coord values is $sum.";
-}
-
-sub solve_part_two {
-	my @input = @_;
+	return @dll;
 }
 
 sub mix_dll {
 	my $dll = shift;
-	my $first_ptr = $dll->[0];
 	my $zero;
+	my $list_length = scalar( @{$dll} ) -1;
 	
 	for my $i (0..$#{$dll}) {
 		my $mover = $dll->[$i];
+		if ($mover->{'value'} == 0) { $zero = $mover };
 		
-		my $diff = abs($mover->{'value'});
+		my $diff = abs($mover->{'value'})  % $list_length;
 		if ($diff > 0) {
-			# Track first_ptr
-			if ($mover == $first_ptr) {
-				$first_ptr = $mover->{'next'};
-			}
-			
 			# Remove links to $mover
 			$mover->{'prev'}{'next'} = $mover->{'next'};
 			$mover->{'next'}{'prev'} = $mover->{'prev'};
@@ -98,12 +108,8 @@ sub mix_dll {
 			$mover->{'prev'} = $dest_prev;
 			$mover->{'next'} = $dest_next;
 		}
-		else {
-			$zero = $mover;
-		}
-		
-		#print_dll($dll, $first_ptr);
-	}
+	}	
+	#print_dll($dll, $zero);
 	
 	return $zero;
 }
