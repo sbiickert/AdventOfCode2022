@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3703D48D293BE99600F8DE08 /* Day03.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3703D48C293BE99600F8DE08 /* Day03.swift */; };
+		3704D250295277AD00B24547 /* Day20.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3704D24F295277AD00B24547 /* Day20.swift */; };
 		3706559F28F9AC4A0051E8C2 /* AoC_2022App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3706559E28F9AC4A0051E8C2 /* AoC_2022App.swift */; };
 		370655A328F9AC4B0051E8C2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 370655A228F9AC4B0051E8C2 /* Assets.xcassets */; };
 		370655A628F9AC4B0051E8C2 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 370655A528F9AC4B0051E8C2 /* Preview Assets.xcassets */; };
@@ -41,6 +42,7 @@
 
 /* Begin PBXFileReference section */
 		3703D48C293BE99600F8DE08 /* Day03.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day03.swift; sourceTree = "<group>"; };
+		3704D24F295277AD00B24547 /* Day20.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day20.swift; sourceTree = "<group>"; };
 		3706559B28F9AC4A0051E8C2 /* AoC 2022.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AoC 2022.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3706559E28F9AC4A0051E8C2 /* AoC_2022App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AoC_2022App.swift; sourceTree = "<group>"; };
 		370655A228F9AC4B0051E8C2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -164,6 +166,7 @@
 				3719BAC529443CD000C52ECA /* Day09.swift */,
 				371591E3294A637B009F2CED /* Day14.swift */,
 				37C94CA6294D81EE0013F634 /* Day16.swift */,
+				3704D24F295277AD00B24547 /* Day20.swift */,
 			);
 			path = Solutions;
 			sourceTree = "<group>";
@@ -270,6 +273,7 @@
 				371591E4294A637B009F2CED /* Day14.swift in Sources */,
 				370655BA28F9AC950051E8C2 /* ContentView.swift in Sources */,
 				37470396293D7EB700304141 /* Day04.swift in Sources */,
+				3704D250295277AD00B24547 /* Day20.swift in Sources */,
 				375CEF65293E56FF002C680A /* Day05.swift in Sources */,
 				3703D48D293BE99600F8DE08 /* Day03.swift in Sources */,
 				37C2D688293A5E8300873C83 /* Day02.swift in Sources */,
