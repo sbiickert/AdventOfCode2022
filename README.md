@@ -22,3 +22,11 @@ Perl is an excellent language for this kind of work, at least until the data str
 ## Difficulty Spike
 
 We've hit the spike, as of Day 16. I barely finished part 1 with code that makes me ill to read it. I will return to this one and approach it again in Swift. Day 17 (Tetris) was easier and a fair bit of fun but it was still in the upper echelons of difficulty. Thankfully Day 18 was a bit of a reprieve, but it still was a 3D challenge.
+
+## And There's the Big Brain Problem
+
+This year, Day 22 started easy, but then the problem wrapped itself into a cube. Trying to understand the relationships among the faces on the cube made my brain hurt. I was forced to do arts and crafts just to be able to visualize it.
+
+![Paper Cubes](https://github.com/sbiickert/AdventOfCode2022/blob/main/Art/aoc_day22_cubes.jpg?raw=true width=600px)
+
+Just don't look directly at [the code](https://github.com/sbiickert/AdventOfCode2022/blob/main/Perl/day22.pl).
