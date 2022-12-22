@@ -27,6 +27,6 @@ We've hit the spike, as of Day 16. I barely finished part 1 with code that makes
 
 This year, Day 22 started easy, but then the problem wrapped itself into a cube. Trying to understand the relationships among the faces on the cube made my brain hurt. I was forced to do arts and crafts just to be able to visualize it.
 
-![Paper Cubes](https://github.com/sbiickert/AdventOfCode2022/blob/main/Art/aoc_day22_cubes.jpg?raw=true width=600px)
+![Paper Cubes](https://github.com/sbiickert/AdventOfCode2022/blob/main/Art/aoc_day22_cubes.jpg)
 
 Just don't look directly at [the code](https://github.com/sbiickert/AdventOfCode2022/blob/main/Perl/day22.pl).
