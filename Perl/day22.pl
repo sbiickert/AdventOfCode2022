@@ -17,8 +17,8 @@ use AOC::Util;
 use AOC::SpatialUtil;
 
 my $INPUT_PATH = '../input';
-my $INPUT_FILE = 'day22_test.txt';
-#my $INPUT_FILE = 'day22_challenge.txt';
+#my $INPUT_FILE = 'day22_test.txt';
+my $INPUT_FILE = 'day22_challenge.txt';
 my @input = read_grouped_input("$INPUT_PATH/$INPUT_FILE");
 
 say "Advent of Code 2022, Day 22: Monkey Map";
@@ -30,7 +30,7 @@ our @OFFS = ([1,0], [0,1], [-1,0], [0,-1]);
 my $map = parse_map($input[0]);
 my @moves = parse_moves($input[1]);
 
-#solve_part($map, 1, @moves);
+solve_part($map, 1, @moves);
 
 $map = parse_map($input[0]); # reset
 solve_part($map, 2, @moves);
@@ -45,22 +45,22 @@ sub solve_part {
 	
 	G2D_set($debug_map, $pos, $DIRS[$facing]);
 	for my $i (0..$#moves) {
-		say $moves[$i];
+		#say $moves[$i];
 		if ($moves[$i] =~ m/\d+/) {
 			for my $m (1..$moves[$i]) {
 				($pos, $facing) = move($map, $pos, $facing, $wrap_rule);
 				G2D_set($debug_map, $pos, $DIRS[$facing]);
-				say "moved to " .  C2D_to_str($pos) . " facing $DIRS[$facing]";
+				#say "moved to " .  C2D_to_str($pos) . " facing $DIRS[$facing]";
 			}
 		}
 		else {
 			$facing = turn($facing, $moves[$i]);
-			say "turned $moves[$i]";
+			#say "turned $moves[$i]";
 		}
-		say "at " .  C2D_to_str($pos) . " facing $DIRS[$facing]";
+		#say "at " .  C2D_to_str($pos) . " facing $DIRS[$facing]";
 		G2D_set($debug_map, $pos, $DIRS[$facing]);
-		G2D_print($debug_map);
-		say '';
+		#G2D_print($debug_map);
+		#say '';
 	}
 	
 	#G2D_print($debug_map);
@@ -132,7 +132,12 @@ sub init_edges {
 		$edges{6} = E2D_create([13,9], [16,12]);
 	}
 	else {
-		
+		$edges{1} = E2D_create( [51,1],   [100,50]);
+		$edges{2} = E2D_create([101,1],   [150,50]);
+		$edges{3} = E2D_create([51,51],  [100,100]);
+		$edges{4} = E2D_create([1,101],   [50,150]);
+		$edges{5} = E2D_create([51,101], [100,150]);
+		$edges{6} = E2D_create([1,151],   [50,200]);
 	}
 }
 
@@ -229,10 +234,92 @@ sub wrap_part2 {
 	}
 	else {
 		# Challenge input
+		if ( $cube_face == 1 ) {
+			if ($facing == 3) { # up
+				$next_face = 6; # TESTED
+				$next_facing = 0; # right
+				$next_pos = [$edges{6}[0], $edges{6}[1] + $pos->[0] - $edges{1}[0]];
+			}
+			elsif ($facing == 2) { # left
+				$next_face = 4; # TESTED
+				$next_facing = 0; # right
+				$next_pos = [$edges{4}[0], $edges{4}[1] + $edges{1}[3] - $pos->[1]];
+			}
+		}
+		elsif ( $cube_face == 2 ) {
+			if ($facing == 3) { # up
+				$next_face = 6; # TESTED
+				$next_facing = $facing; # up
+				$next_pos = [$edges{6}[0] + $pos->[0] - $edges{2}[0], $edges{6}[3]];
+			}
+			elsif ($facing == 0) { # right
+				$next_face = 5; # TESTED
+				$next_facing = 2; # left
+				$next_pos = [$edges{5}[2], $edges{5}[3] - ($pos->[1] - $edges{2}[1])];
+			}
+			elsif ($facing == 1) { # down
+				$next_face = 3; # TESTED
+				$next_facing = 2; # left
+				$next_pos = [$edges{3}[2], $edges{3}[1] + $pos->[0] - $edges{2}[0]];
+			}
+		}
+		elsif ( $cube_face == 3 ) {
+			if ($facing == 2) { # left
+				$next_face = 4; # TESTED
+				$next_facing = 1; # down
+				$next_pos = [$edges{4}[0] + $pos->[1] - $edges{3}[1], $edges{4}[1]];
+			}
+			elsif ($facing == 0) { # right
+				$next_face = 2; # TESTED
+				$next_facing = 3; # up
+				$next_pos = [$edges{2}[0] + $pos->[1] - $edges{3}[1], $edges{2}[3]];
+			}
+		}
+		elsif ( $cube_face == 4 ) {
+			if ($facing == 3) { # up
+				$next_face = 3; # TESTED
+				$next_facing = 0; # right
+				$next_pos = [$edges{3}[0], $edges{3}[1] + $pos->[0] - $edges{4}[0]];
+			}
+			elsif ($facing == 2) { # left
+				$next_face = 1; # TESTED
+				$next_facing = 0; # right
+				$next_pos = [$edges{1}[0], $edges{1}[1] + $edges{4}[3] - $pos->[1]];
+			}
+		}
+		elsif ( $cube_face == 5 ) {
+			if ($facing == 0) { # right
+				$next_face = 2; # TESTED
+				$next_facing = 2; # left
+				$next_pos = [$edges{2}[2], $edges{2}[1] + $edges{5}[3] - $pos->[1]];
+			}
+			elsif ($facing == 1) { # down
+				$next_face = 6; # TESTED
+				$next_facing = 2; # left
+				$next_pos = [$edges{6}[2], $edges{6}[1] + $pos->[0] - $edges{5}[0]];
+			}
+		}
+		elsif ( $cube_face == 6 ) {
+			if ($facing == 0) { # right
+				$next_face = 5; # TESTED
+				$next_facing = 3; # up
+				$next_pos = [$edges{5}[0] + $pos->[1] - $edges{6}[1], $edges{5}[3]];
+			}
+			elsif ($facing == 1) { # down
+				$next_face = 2; # TESTED
+				$next_facing = $facing;
+				$next_pos = [$edges{2}[0] + $pos->[0] - $edges{6}[0], $edges{2}[1]];
+			}
+			elsif ($facing == 2) { # left
+				$next_face = 1; # TESTED
+				$next_facing = 1; # down
+				$next_pos = [$edges{1}[0] + $pos->[1] - $edges{6}[1], $edges{1}[1]];
+			}
+		}
 	}
-	say "Wrapping from face $cube_face to $next_face,";
-	say C2D_to_str($pos) . " to " . C2D_to_str($next_pos);
-	say "Facing $DIRS[$next_facing].";
+	#say "Wrapping from face $cube_face to $next_face,";
+	#say C2D_to_str($pos) . " to " . C2D_to_str($next_pos);
+	#say "Facing $DIRS[$next_facing].";
 	return ($next_pos, $next_facing);
 }
 
