@@ -10,6 +10,7 @@ use Modern::Perl 2022;
 use Exporter;
 use feature 'signatures';
 use List::Util qw(min max);
+#use Storable 'dclone';
 
 our @ISA = qw( Exporter );
 #our @EXPORT_OK = qw(C2D_create C3D_create);
@@ -25,7 +26,7 @@ our @EXPORT = qw(
 	
 	E2D_create E2D_build E2D_to_str
 	E2D_min E2D_max E2D_width E2D_height E2D_area E2D_all_coords
-	E2D_equal E2D_contains E2D_intersect E2D_union
+	E2D_equal E2D_contains E2D_intersect E2D_union E2D_inset
 	
 	E3D_create E3D_build E3D_to_str
 	E3D_min E3D_max E3D_width E3D_height E3D_depth
@@ -338,6 +339,16 @@ sub E2D_union($e1, $e2) {
 		}
 	}
 	return @results;
+}
+
+sub E2D_inset($e2d, $inset) {
+	my $result = [];
+	$result->[0] = $e2d->[0] + $inset;	
+	$result->[1] = $e2d->[1] + $inset;
+	$result->[2] = $e2d->[2] - $inset;
+	$result->[3] = $e2d->[3] - $inset;
+	die if $result->[2] <= $result->[0] || $result->[3] <= $result->[1];
+	return $result;
 }
 
 
