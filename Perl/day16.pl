@@ -11,7 +11,7 @@ use lib $local_lib;
 use Modern::Perl 2022;
 use autodie;
 use Data::Dumper;
-#use Math::Combinatorics;
+use Math::Combinatorics qw(combine);
 #use Storable 'dclone';
 use List::Util qw( max );
 
@@ -91,84 +91,82 @@ sub dfs1 {
 	return $relief;
 }
 
+our @ASSIGNED_JOBS;
+
 sub solve_part_two {
 	my $start = 'AA';
-	%CACHE = ();
 	$TIME_LIMIT = 26;
-	$MAX_RELIEF = 0;
-
-	my $max_pressure_relieved = dfs2('', '', $start, $start, 0, 0);
+	
+	my @non_zero = ();
+	for my $key (keys %GRAPH) {
+		push(@non_zero, $key) if ($GRAPH{$key}{'rate'} > 0);
+	}
+	my $count = scalar(@non_zero);
+	
+	my $job_size = ($count % 2 == 0) ? $count / 2 : int($count/2) + 1;
+	my @human_assignments = combine($job_size, @non_zero);
+	my $max_pressure_relieved = 0;
+	for my $iter (0..$#human_assignments) {
+		say "$iter / $#human_assignments ($max_pressure_relieved)";
+		@ASSIGNED_JOBS = @{$human_assignments[$iter]};
+		$MAX_RELIEF = 0;
+		%CACHE = ();
+		my $h_pressure_relieved = dfs3($start, $start, 0, 0);
+		
+		# Elephant does the rest
+		my @e_assignments = ();
+		for my $nz (@non_zero) {
+			push(@e_assignments, $nz) if !grep( /^$nz$/, @ASSIGNED_JOBS );
+		}
+		@ASSIGNED_JOBS = @e_assignments;
+		$MAX_RELIEF = 0;
+		%CACHE = ();
+		my $e_pressure_relieved = dfs3($start, $start, 0, 0);
+		
+		my $sum_pressure_relieved = $h_pressure_relieved + $e_pressure_relieved;
+		say "sum: $sum_pressure_relieved = human: $h_pressure_relieved + elephant: $e_pressure_relieved";
+		
+		if ($sum_pressure_relieved > $max_pressure_relieved) {
+			$max_pressure_relieved = $sum_pressure_relieved;
+		}
+	}
 	
 	say "Part Two: the max pressure release is $max_pressure_relieved.";
 }
 
-sub dfs2 {
-	my $human_came_from = shift;
-	my $elephant_came_from = shift;
-	my ($h_node_id, $e_node_id, $time, $relief, %open_valves) = @_;
+sub dfs3 {
+	my $came_from = shift;
+	my ($node_id, $time, $relief, @open_valves) = @_;
+	my $cache_key = join('-', @_);
 	
-	# No difference if it's the human at the spot or elephant
-	my $cache_key1 = join('-', $h_node_id, $e_node_id, $time, $relief, sort keys %open_valves);
-	my $cache_key2 = join('-', $e_node_id, $h_node_id, $time, $relief, sort keys %open_valves);
-	if (exists($CACHE{$cache_key1}))	{ return $CACHE{$cache_key1}; }
-	if (exists($CACHE{$cache_key2}))	{ return $CACHE{$cache_key2}; }
+	if (exists($CACHE{$cache_key}))	{ return $CACHE{$cache_key}; }
 
 	$time++;
 	if ($time > $TIME_LIMIT) {
 		if ($relief > $MAX_RELIEF) {
-			say $relief;
+			#say $relief;
 			$MAX_RELIEF = $relief;
 		}
 		return $relief;
 	}
 	
 	# Add rates of open valves to $relief
-	for my $id (keys %open_valves) {
+	for my $id (@open_valves) {
 		$relief += $GRAPH{$id}{'rate'};
 	}
 	
-	my $h_node = $GRAPH{$h_node_id};
-	my $e_node = $GRAPH{$e_node_id};
+	my $node = $GRAPH{$node_id};
 	
-	# The human and elephant can either open valve or move
-	my @h_moves = ();
-	if ( $h_node->{'rate'} > 0 && (!grep( /^$h_node_id$/, keys %open_valves )) ) {
-		push(@h_moves, "open $h_node_id");
-	}
-	if ( $time < $TIME_LIMIT) { # Only move if time isn't up
-		for my $neighbor (@{$GRAPH{$h_node_id}{'leads_to'}}) {
-			if ($neighbor ne $human_came_from) { # Never backtrack
-				push(@h_moves, "move $neighbor");
-			}
-		}
-	}
-	if (scalar @h_moves == 0) { @h_moves = ("stay $h_node_id"); }
-	
-	my @e_moves = ();
-	if ( $e_node->{'rate'} > 0 && (!grep( /^$e_node_id$/, keys %open_valves )) ) {
-		push(@e_moves, "open $e_node_id");
-	}
-	if ( $time < $TIME_LIMIT) { # Only move if time isn't up
-		for my $neighbor (@{$GRAPH{$e_node_id}{'leads_to'}}) {
-			if ($neighbor ne $elephant_came_from) { # Never backtrack
-				push(@e_moves, "move $neighbor");
-			}
-		}
-	}
-	if (scalar @e_moves == 0) { @e_moves = ("stay $e_node_id"); }
-	
+	# Can either open valve or move
 	my @reliefs = ();
-	for my $h_move (@h_moves) {
-		my ($h_action, $h_destination_id) = split(' ', $h_move);
-		for my $e_move (@e_moves) {
-			my ($e_action, $e_destination_id) = split(' ', $e_move);
-			my %new_open_valves = %open_valves;
-			if ($h_action eq 'open') { $new_open_valves{$h_node_id} = 1; }
-			if ($e_action eq 'open') { $new_open_valves{$e_node_id} = 1; }
-			
-			push(@reliefs, dfs2($h_node_id, $e_node_id, 
-								$h_destination_id, $e_destination_id,
-								$time, $relief, %new_open_valves));
+	if ( $node->{'rate'} > 0 && (!grep( /^$node_id$/, @open_valves )) ) {
+		push(@reliefs, dfs3($node_id, $node_id, $time, $relief, @open_valves, $node_id)) if grep( /^$node_id$/, @ASSIGNED_JOBS );
+	}
+	if ( $time < $TIME_LIMIT) { # Only move if time isn't up
+		for my $neighbor (@{$GRAPH{$node_id}{'leads_to'}}) {
+			if ($neighbor ne $came_from) { # Never backtrack
+				push(@reliefs, dfs3($node_id, $neighbor, $time, $relief, @open_valves));
+			}
 		}
 	}
 	
@@ -176,8 +174,7 @@ sub dfs2 {
 		$relief = max(@reliefs);
 	}
 	
-	$CACHE{$cache_key1} = $relief;
-	$CACHE{$cache_key2} = $relief;
+	$CACHE{$cache_key} = $relief;
 	return $relief;
 }
 
