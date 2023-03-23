@@ -2,11 +2,9 @@
 BEGIN {
     use Cwd;
     our $directory = cwd;
-    our $local_lib = $ENV{"HOME"} . '/perl5/lib/perl5';
 }
 
 use lib $directory;
-use lib $local_lib;
 
 use Modern::Perl 2022;
 use autodie;
