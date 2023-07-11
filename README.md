@@ -30,3 +30,7 @@ This year, Day 22 started easy, but then the problem wrapped itself into a cube.
 ![Paper Cubes](https://github.com/sbiickert/AdventOfCode2022/blob/main/Art/aoc_day22_cubes.jpg)
 
 Just don't look directly at [the code](https://github.com/sbiickert/AdventOfCode2022/blob/main/Perl/day22.pl).
+
+## In the End
+
+Doing AoC 2022 in Perl was a success, and I don't really have to make any excuses. I solved everything, and I don't think using a different language would have changed it for better or for worse. There are four days' solutions that are slow: 15, 16, 19 and 24. The problem is the solution, not the language. Everything else solves in a total of 61 seconds on my M2 MacBook Pro. I think the only thing I would change is the naming convention for the AOC::SpatialUtil functions. They are well-named (C2D* for 2D coords, etc.), but a pain to type.
