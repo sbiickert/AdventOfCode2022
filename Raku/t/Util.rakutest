@@ -1,0 +1,82 @@
+#!/usr/bin/env raku
+
+use AOC::Util;
+use Test;
+
+my $INPUT_PATH = '../input';
+my $INPUT_FILE = 'day00_test.txt';
+my $NUM_TESTS = 9;
+
+plan $NUM_TESTS;
+
+test_read_input("$INPUT_PATH/$INPUT_FILE");
+test_read_grouped_input("$INPUT_PATH/$INPUT_FILE");
+test_approx_equal();
+# test_lcm();
+# test_gcd();
+
+
+done-testing;
+
+sub test_read_input($input_file) {
+	say 'Testing reading input';
+	my @input = read_input($input_file);
+	ok (@input.elems == 10) or diag "Wrong number of lines";
+	ok (@input[4] eq "G1, L0") or diag "Incorrect value at line 4";
+
+	#.say for @input;
+	
+	say 'Testing reading input, ignoring empty lines';
+	@input = read_input($input_file, True);
+	ok (@input.elems == 8) or diag "Wrong number of lines";
+	#.say for @input;
+}
+
+sub test_read_grouped_input($input_file) {
+	say 'Testing reading grouped input';
+	my @input = read_grouped_input($input_file);
+	ok (@input.elems == 3) or diag "Wrong number of groups";
+# 	for @input -> @group {
+# 		.say for @group;
+# 		say '----'
+# 	}
+	
+	say 'Testing just reading group 1';
+	my @group = read_grouped_input($input_file, 1);
+	#say @group;
+	ok (@group.elems == 2) or diag "Wrong number of lines in group 1";
+	#.say for @group;
+	
+	say 'Testing just reading a group index out of range (10)';
+	@group = read_grouped_input($input_file, 10);
+	ok (!@group) or diag "That should have been empty.";
+	#say "Successfully returned an empty array."
+}
+
+
+sub test_approx_equal {
+	say 'Testing approximate equality';
+	my $f1 = 10.0;
+	my $f2 = 11.0 - 1.0;
+
+	ok approx_equal($f1, $f2) or diag "Floats were not equal with default threshold.";
+	ok approx_equal($f1, $f2, 0.0000001) or diag "Floats were not equal with user threshold.";
+
+	my $f3 = 10.01;
+	nok approx_equal($f1, $f3) or diag "Floats were equal.";
+}
+
+# DON'T NEED: lcm and gcd are built-in operators!!
+
+#  sub test_gcd() {
+# 	say 'Testing GCD';
+# 	ok gcd(2,4) == 2 or diag 'GCD of 2 and 4';
+# 	ok gcd(15,20) == 5 or diag 'GCD of 15 and 20';
+# 	ok gcd(13,20) == 1 or diag 'GCD of 13 and 20';
+#  }
+# 
+#  sub test_lcm() {
+# 	say 'Testing LCM';
+# 	ok lcm([2,3,4]) == 12 or diag 'LCM of 2, 3, 4';
+# 	ok lcm([3,4,13]) == 156 or diag 'LCM of 3, 4, 13';
+#  }

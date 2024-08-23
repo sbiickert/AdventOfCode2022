@@ -1,0 +1,68 @@
+#!/usr/bin/env raku
+
+use AOC::Util;
+use AOC::Geometry;
+use Test;
+
+my $NUM_TESTS := 14;
+plan $NUM_TESTS;
+
+test_coord2d();
+#test_extent2d();
+
+done-testing;
+
+sub test_coord2d() {
+	say 'Testing ' ~ Coord2D.^name;
+	my $c2d = Coord2D.new(x => 10, y => 30);
+	my $c_str = $c2d.Str;
+	ok $c_str eq "[10,30]" or diag "c2 str $c_str";
+
+	my $c_from_str = Coord2D.from_str($c_str);
+	ok $c_from_str eqv $c2d or diag "c2_from_str $c_from_str";
+
+	my $other = Coord2D.new(x => 10, y => 30);
+	ok $other eqv $c2d or diag "Equal coords are unequal.";
+
+	$other = Coord2D.new(x => 5,  y=> 20);
+	nok $c2d eqv $other or diag "Unequal coords are equal.";
+
+	my $origin = Coord2D.origin();
+	ok Coord2D.new(x => 0, y => 0) eqv $origin or diag 'Origin check';
+
+	my $delta = $c2d.delta($other);
+	ok $delta.col == -5 && $delta.row == -10 or diag "Delta $delta.Str";
+
+	ok approx_equal($c2d.distanceTo($other).Rat, 11.1803398874989) or diag "Distance wasn't within tolerance.";
+	ok $c2d.manhattanDistanceTo($other) == 15 or diag "Manhattan distance was not correct.";
+
+	ok $origin.offset('N') eqv Coord2D.from_ints( 0,-1) or diag "Testing offset N";
+	ok $origin.offset('<') eqv Coord2D.from_ints(-1, 0) or diag "Testing offset <";
+	ok $origin.offset('?') eqv Coord2D.from_ints( 0, 0) or diag "Testing offset ?";
+
+	$other = Coord2D.from_ints(1,1);
+	nok $origin.is_adjacent( $other ) or diag "Tested diagonal coord not adjacent for ROOK rule.";
+	ok $origin.is_adjacent( $other, AOC::Geometry::BISHOP ) or diag "Tested diagonal coord is adjacent for BISHOP rule.";
+	my @adj_coords = $origin.get_adjacent_coords();
+	ok @adj_coords.elems == 4 or diag "!4 adjacent coords for ROOK.";
+}
+
+sub test_extent2d() {
+	say 'Testing ' ~ Extent2D.^name;
+	my $e1 = Extent2D.new(min => Coord2D.new( x => 1, y => 3 ), max => Coord2D.new( x => 4, y => 7 ));
+	say "e1: a new extent ", $e1;
+	my $e2 = Extent2D.from_ints: < 9 8 7 6 >;
+	say "e2: created from ints 9 8 7 6 ", $e2;
+	$e1.width == 4 or die "Expected width to be 4";
+	$e1.height == 5 or die "Expected height to be 5";
+	$e1.area == 20 or die "Expected area to be 20";
+	my @coords = $e1.all_coords();
+	say @coords;
+	@coords.elems == $e1.area or die "Should be one coord for every square unit area";
+	my $e3 = $e1.clone;
+	say $e1 eqv $e3;
+	my $e4 = $e1.inset(1);
+	say $e4;
+	$e1.contains( Coord2D.new( x => 2, y => 3 ) ) or die "$e1 should contain point 2,3";
+	!$e1.contains( Coord2D.new( x => 20, y => 30 ) ) or die "$e1 should NOT contain point 20, 30";
+}
