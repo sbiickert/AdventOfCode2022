@@ -1,0 +1,41 @@
+#!/usr/bin/env raku
+
+use AOC::Geometry;
+use AOC::Grid;
+use Test;
+
+my $NUM_TESTS := 1;
+plan $NUM_TESTS;
+
+# Call testing functions
+test_grid();
+
+done-testing;
+
+sub test_grid() {
+	say "\nTesting Grid";
+	# g2_make g2_get_default g2_get_rule
+	my $g2d = Grid.new(default => '.', rule => ROOK);
+	ok $g2d.default eq '.' or diag "Getting default";
+	ok $g2d.rule eq ROOK or diag "Getting rule";
+	dd $g2d;
+	ok $g2d.extent().is_empty or diag 'Check initial extent is empty';
+
+	my @coords = (Coord.new(x=>1,y=>1), Coord.new(x=>2,y=>2),
+				  Coord.new(x=>3,y=>3), Coord.new(x=>4,y=>4),
+				  Coord.new(x=>1,y=>4), Coord.new(x=>2,y=>4),
+				  Coord.new(x=>3,y=>4));
+
+	# set
+	$g2d.set(@coords[0], 'A');
+	$g2d.set(@coords[1], 'B');
+	$g2d.set(@coords[3], 'D');
+
+	# get
+	say $g2d.get(@coords[0]);
+	say $g2d.get(@coords[2]);
+	ok $g2d.get(@coords[0]) eq 'A', "Testing g2_get";
+	ok $g2d.get(@coords[1]) eq 'B', "Testing g2_get";
+	ok $g2d.get(@coords[2]) eq $g2d.default, "Testing g2_get";
+	ok $g2d.get(@coords[3]) eq 'D', "Testing g2_get";
+}
