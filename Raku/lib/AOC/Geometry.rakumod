@@ -37,13 +37,14 @@ sub resolve_rotation_alias(Str $dir --> Str) {
 	return %ROTATION_ALIASES{$dir} // Nil;
 }
 
-constant ROOK is export = 'ROOK';
-constant BISHOP is export = 'BISHOP';
-constant QUEEN is export = 'QUEEN';
+enum AdjacencyRule is export <ROOK BISHOP QUEEN>;
+# constant ROOK is export = 'ROOK';
+# constant BISHOP is export = 'BISHOP';
+# constant QUEEN is export = 'QUEEN';
 
-my %ADJACENCY_RULES = ('ROOK'    => ['N','E','S','W'],
-						'BISHOP' => ['NE','SE','SW','NW'],
-						'QUEEN'  => ['N','NE','E','SE','S','SW','W','NW']);
+my %ADJACENCY_RULES = (ROOK    => ['N','E','S','W'],
+						BISHOP => ['NE','SE','SW','NW'],
+						QUEEN  => ['N','NE','E','SE','S','SW','W','NW']);
 						
 class Coord is export {
 	has Int $.x = 0;
@@ -91,11 +92,11 @@ class Coord is export {
 		return Coord.origin;
 	}
 	
-	method is_adjacent(Coord $other, Str $rule = ROOK --> Bool) {
-		if ($rule eq ROOK) {
+	method is_adjacent(Coord $other, AdjacencyRule $rule = AdjacencyRule::ROOK --> Bool) {
+		if ($rule eq AdjacencyRule::ROOK) {
 			return self.manhattanDistanceTo($other) == 1;
 		}
-		elsif ($rule eq BISHOP) {
+		elsif ($rule eq AdjacencyRule::BISHOP) {
 			return abs($!x - $other.x) == 1 &&
 					abs($!y - $other.y) == 1;
 		}
@@ -106,7 +107,7 @@ class Coord is export {
 	}
 	
 	
-	method get_adjacent_coords(Str $rule = ROOK) {
+	method get_adjacent_coords(AdjacencyRule $rule = AdjacencyRule::ROOK) {
 		my @result = ();
 		if (%ADJACENCY_RULES{$rule}:exists) {
 			my @dirs = %ADJACENCY_RULES{$rule}.flat;
@@ -156,7 +157,7 @@ class Position is export {
 		my $rot_dir = resolve_rotation_alias($rotation_direction);
 		my $step = 0;
 		if $rot_dir { $step = %ROTATION_DIRS{$rot_dir}; }
-		my @ordered = %ADJACENCY_RULES{ROOK}.flat; # ('N', 'E', 'S', 'W');
+		my @ordered = %ADJACENCY_RULES{AdjacencyRule::ROOK}.flat; # ('N', 'E', 'S', 'W');
 		my $index = @ordered.first($.dir, :k);
 		$index = ($index + $step) % 4;
 		return Position.new(coord => $.coord.clone, dir => @ordered[$index]);

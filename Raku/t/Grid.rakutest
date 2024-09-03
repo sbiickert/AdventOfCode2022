@@ -12,13 +12,22 @@ test_grid();
 
 done-testing;
 
+class GridObject does GridGlyph {
+	has Int $.id;
+	has Str $.type;
+	has Int $.hp;
+	
+	method glyph(--> Str) {
+		return $.type.substr(0, 1);
+	}
+}
+
 sub test_grid() {
 	say "\nTesting Grid";
 	# g2_make g2_get_default g2_get_rule
-	my $g2d = Grid.new(default => '.', rule => ROOK);
+	my $g2d = Grid.new(default => '.', rule => AdjacencyRule::ROOK);
 	ok $g2d.default eq '.' or diag "Getting default";
-	ok $g2d.rule eq ROOK or diag "Getting rule";
-	dd $g2d;
+	ok $g2d.rule eq AdjacencyRule::ROOK or diag "Getting rule";
 	ok $g2d.extent().is_empty or diag 'Check initial extent is empty';
 
 	my @coords = (Coord.new(x=>1,y=>1), Coord.new(x=>2,y=>2),
@@ -32,10 +41,21 @@ sub test_grid() {
 	$g2d.set(@coords[3], 'D');
 
 	# get
-	say $g2d.get(@coords[0]);
-	say $g2d.get(@coords[2]);
-	ok $g2d.get(@coords[0]) eq 'A', "Testing g2_get";
-	ok $g2d.get(@coords[1]) eq 'B', "Testing g2_get";
-	ok $g2d.get(@coords[2]) eq $g2d.default, "Testing g2_get";
-	ok $g2d.get(@coords[3]) eq 'D', "Testing g2_get";
+	ok $g2d.get(@coords[0]) eq 'A' or diag "Testing g2_get";
+	ok $g2d.get(@coords[1]) eq 'B' or diag "Testing g2_get";
+	ok $g2d.get(@coords[2]) eq $g2d.default or diag "Testing g2_get";
+	ok $g2d.get(@coords[3]) eq 'D' or diag "Testing g2_get";
+	
+	# Non-string values
+	my $elf = GridObject.new(id => 1, type => 'Elf', hp => 100);
+	my %goblin = {'id' => 2, 'type' => 'Goblin', 'hp' => 95, 'glyph' => 'G'};
+	my @santa = ['S', 3, 'Santa', 110];
+	
+	$g2d.set(@coords[4], $elf);
+	$g2d.set(@coords[5], %goblin);
+	$g2d.set(@coords[6], @santa);
+	
+	ok $g2d.get_glyph(@coords[4]) eq 'E' or diag "Elf did not return the correct glyph.";
+	ok $g2d.get_glyph(@coords[5]) eq 'G' or diag "Goblin did not return the correct glyph.";
+	ok $g2d.get_glyph(@coords[6]) eq 'S' or diag "Santa did not return the correct glyph.";
 }

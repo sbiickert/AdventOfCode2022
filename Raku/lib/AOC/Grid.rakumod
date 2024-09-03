@@ -9,30 +9,12 @@ role GridGlyph is export {
 class Grid is export {
 	has %!data = Hash.new;
 	has $.default = '.';
-	has $.rule is required;
+	has AOC::Geometry::AdjacencyRule $.rule is required;
 	has Extent $!extent;
 	
-		
-	# Overriding default constructor to check $rule
-# 	method new( Str :$rule = ROOK,
-# 				Str :$default = '.',
-# 				:%data = {}, 		#ignored
-# 				:$extent = Nil )	#ignored
-# 	{
-# 		my $ok_rule = set <ROOK, BISHOP, QUEEN> (elem) $rule ?? $rule !! ROOK;
-# 		return self.bless(data => {},
-# 						  rule => $ok_rule,
-# 						  extent => Extent.new,
-# 						  default => $default );
-# 	}
-	
 	submethod TWEAK {
-		say 'TWEAK';
-		# Rule has to be one of the known constants, defaults to ROOK
-		if !(set <ROOK, BISHOP, QUEEN> (elem) $!rule) { $!rule = ROOK };
 		%!data = Hash.new;
 		$!extent = Extent.new;
-		dd self;
 	}
 	
 	method get(Coord $key --> Any) {
@@ -50,7 +32,7 @@ class Grid is export {
 		elsif $value.isa(Map) {
 			return $value{'glyph'}.Str;
 		}
-		elsif $value.isa(GridGlyph) {
+		elsif $value.does(GridGlyph) {
 			return $value.glyph;
 		}
 		return $value.Str;
@@ -62,7 +44,6 @@ class Grid is export {
 		# Update the extent to include the $coord
 		if ! $.extent.contains($key) {
 			my $temp = $.extent.expand_to_fit($key);
-			dd $temp;
 			$!extent = $temp;
 		}
 	}

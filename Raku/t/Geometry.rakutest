@@ -43,7 +43,7 @@ sub test_coord2d() {
 
 	$other = Coord.from_ints(1,1);
 	nok $origin.is_adjacent( $other ) or diag "Tested diagonal coord not adjacent for ROOK rule.";
-	ok $origin.is_adjacent( $other, AOC::Geometry::BISHOP ) or diag "Tested diagonal coord is adjacent for BISHOP rule.";
+	ok $origin.is_adjacent( $other, AOC::Geometry::AdjacencyRule::BISHOP ) or diag "Tested diagonal coord is adjacent for BISHOP rule.";
 	my @adj_coords = $origin.get_adjacent_coords();
 	ok @adj_coords.elems == 4 or diag "!4 adjacent coords for ROOK.";
 }
