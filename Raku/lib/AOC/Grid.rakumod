@@ -17,15 +17,28 @@ class Grid is export {
 		$!extent = Extent.new;
 	}
 	
-	method get(Coord $key --> Any) {
-		if %!data{$key.Str}:exists {
-			return %!data{$key.Str};
+	multi method get(Coord $key --> Any) {
+		self.get($key.Str);
+	}
+	
+	multi method get(Str $key --> Any) {
+		if %!data{$key}:exists {
+			return %!data{$key};
 		}
 		return $.default;
 	}
 	
-	method get_glyph(Coord $key --> Str) {
+	multi method get_glyph(Str $key --> Str) {
 		my $value = self.get($key);
+		return self!glyph_from_value($value);
+	}
+	
+	multi method get_glyph(Coord $key --> Str) {
+		my $value = self.get($key);
+		return self!glyph_from_value($value);
+	}
+	
+	method !glyph_from_value(Any $value --> Str) {
 		if $value.isa(List) {
 			return $value[0].Str;
 		}
@@ -62,10 +75,29 @@ class Grid is export {
 	method coords(Str $with_value = '') {
 		my Coord @result = ();
 		for %!data.keys -> $key {
-			if $with_value.length > 0 && self.get_glyph($key) eq $with_value {
-				@result.push($key);
+			if $with_value.chars == 0 || self.get_glyph($key) eq $with_value {
+				@result.push(Coord.from_str($key));
 			}
 		}
 		return @result;
+	}
+	
+	method histogram(Bool $include_unset = False --> Hash) {
+		my Int %hist is default(0);
+		
+		my Coord @coords_to_summarize = ();
+		if ($include_unset) {
+			@coords_to_summarize = self.extent.all_coords;
+		}
+		else {
+			@coords_to_summarize = self.coords;
+		}
+		
+		for @coords_to_summarize -> $c {
+			my $val = self.get_glyph($c);
+			%hist{$val} = %hist{$val} + 1;
+		}
+		
+		return %hist;
 	}
 }
