@@ -61,9 +61,9 @@ class Grid is export {
 		}
 	}
 	
-	method clear(Coord $key, Bool $reset_extent = False) {
+	method clear(Coord $key, Bool :$reset_extent = False) {
 		%!data{$key.Str}:delete;
-		self.reset_extent;
+		self!reset_extent;
 	}
 	
 	method extent(--> Extent) { return $!extent; }
@@ -99,5 +99,46 @@ class Grid is export {
 		}
 		
 		return %hist;
+	}
+	
+	method neighbors(Coord $c --> Array) {
+		return $c.get_adjacent_coords($.rule);
+	}
+	
+	method print(:%markers = {}, Bool :$invert_y = False) {
+		print self.sprint(markers => %markers, invert_y => $invert_y);
+	}
+	
+	method sprint(:%markers = {}, Bool :$invert_y = False --> Str) {
+		my $str = '';
+		return $str if $!extent.is_empty;
+		
+		my $xmin = $!extent.min.x;
+		my $xmax = $!extent.max.x;
+		my $ymin = $!extent.min.y;
+		my $ymax = $!extent.max.y;
+		
+		my @y_indexes = ();
+		for ($ymin..$ymax) -> $y {
+			@y_indexes.push($y);
+		}
+		@y_indexes = @y_indexes.reverse if $invert_y;
+
+		for @y_indexes -> $y {
+			my @row = ();
+			for ($xmin..$xmax) -> $x {
+				my $c = Coord.from_ints($x, $y);
+				my $c_str = $c.Str;
+				my $glyph = self.get_glyph($c_str);
+				if %markers.keys.elems > 0 && (%markers{$c_str}:exists) {
+					$glyph = %markers{$c_str};
+				}
+				@row.push($glyph);
+			}
+			@row.push("\n");
+			$str ~= @row.join(' ');
+		}
+		
+		return $str;
 	}
 }

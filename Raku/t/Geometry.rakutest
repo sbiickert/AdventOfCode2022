@@ -37,9 +37,9 @@ sub test_coord2d() {
 	ok approx_equal($c2d.distanceTo($other).Rat, 11.1803398874989) or diag "Distance wasn't within tolerance.";
 	ok $c2d.manhattanDistanceTo($other) == 15 or diag "Manhattan distance was not correct.";
 
-	ok $origin.offset('N') eqv Coord.from_ints( 0,-1) or diag "Testing offset N";
-	ok $origin.offset('<') eqv Coord.from_ints(-1, 0) or diag "Testing offset <";
-	ok $origin.offset('?') eqv Coord.from_ints( 0, 0) or diag "Testing offset ?";
+	ok Coord.get_offset('N') eqv Coord.from_ints( 0,-1) or diag "Testing offset N";
+	ok Coord.get_offset('<') eqv Coord.from_ints(-1, 0) or diag "Testing offset <";
+	ok Coord.get_offset('?') eqv Coord.from_ints( 0, 0) or diag "Testing offset ?";
 
 	$other = Coord.from_ints(1,1);
 	nok $origin.is_adjacent( $other ) or diag "Tested diagonal coord not adjacent for ROOK rule.";

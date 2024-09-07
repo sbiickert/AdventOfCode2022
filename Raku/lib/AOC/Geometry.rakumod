@@ -50,14 +50,23 @@ class Coord is export {
 	has Int $.x = 0;
 	has Int $.y = 0;
 	
-	# class method: construct from two Ints
-	method from_ints(::?CLASS:U $c2d: Int $x, Int $y) {
-		$c2d.new( x => $x, y => $y );
-	}
-	
 	# class method: origin
 	method origin(::?CLASS:U $c2d:) {
 		$c2d.new(x => 0, y => 0);
+	}
+	
+	# class method: origin
+	method get_offset(::?CLASS:U $c2d: Str $direction --> Coord) {
+		my $off = resolve_offset_alias($direction);
+		if $off {
+			return %OFFSET_DIRS{$off};
+		}
+		return Coord.origin;
+	}
+	
+	# class method: construct from two Ints
+	method from_ints(::?CLASS:U $c2d: Int $x, Int $y) {
+		$c2d.new( x => $x, y => $y );
 	}
 	
 	# class method: construct from a Str representation 
@@ -83,14 +92,6 @@ class Coord is export {
 	method add(Coord $other --> Coord) {
 		Coord.new( x => $.x + $other.x, y => $.y + $other.y )
 	}
-
-	method offset(Str $direction --> Coord) {
-		my $off = resolve_offset_alias($direction);
-		if $off {
-			return %OFFSET_DIRS{$off};
-		}
-		return Coord.origin;
-	}
 	
 	method is_adjacent(Coord $other, AdjacencyRule $rule = AdjacencyRule::ROOK --> Bool) {
 		if ($rule eq AdjacencyRule::ROOK) {
@@ -112,7 +113,7 @@ class Coord is export {
 		if (%ADJACENCY_RULES{$rule}:exists) {
 			my @dirs = %ADJACENCY_RULES{$rule}.flat;
 			for @dirs -> $dir {
-				@result.push(self.offset($dir));
+				@result.push(self.add(Coord.get_offset($dir)));
 			}
 		}
 		return @result;

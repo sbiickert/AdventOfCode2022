@@ -82,4 +82,35 @@ sub test_grid() {
 	#dd %hist;
 	ok %hist{'A'} == 1 && %hist{'B'} == 2 && %hist{'.'} == 9, 'Checking histogram including unset' or diag "failed";
 
+	# neighbors
+	my @n = $g2d.neighbors(@coords[1]);
+	ok @n[0] eqv Coord.from_ints(2,1) && @n[1] eqv Coord.from_ints(3,2) &&
+		@n[2] eqv Coord.from_ints(2,3) && @n[3] eqv Coord.from_ints(1,2), 'Checking rook neighbours'
+		or diag "Rook neighbors incorrect.";
+
+	
+	# print
+	$g2d.print();
+	my $grid_str = $g2d.sprint();
+	my $expected = "A . . . \n. B . . \n. . B . \nE G S D \n";
+	ok $grid_str eq $expected, 'Checking grid to string';
+
+	$grid_str = $g2d.sprint(invert_y => True);
+	$expected = "E G S D \n. . B . \n. B . . \nA . . . \n";
+	ok $grid_str eq $expected, 'Checking inverted grid to string';
+
+	my %markers = (Coord.from_ints(4,1) => '*');
+	$grid_str = $g2d.sprint(markers => %markers);
+	$expected = "A . . * \n. B . . \n. . B . \nE G S D \n";
+	ok $grid_str eq $expected, 'Checking grid with markers to string';
+
+	# clear
+	$g2d.clear(@coords[2]);
+	ok $g2d.get(@coords[2]) eq '.', 'Checking grid clearing';
+	my $e_original = $g2d.extent();
+	$g2d.set(Coord.from_ints(100, 100), 'X');
+	ok $g2d.extent.se eqv Coord.from_ints(100,100), "Extent after expand is big";
+	$g2d.clear(Coord.from_ints(100, 100), reset_extent => True);
+	ok $g2d.extent eqv $e_original, "Extent after clear is small";
+
 }
