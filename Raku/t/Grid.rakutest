@@ -4,7 +4,7 @@ use AOC::Geometry;
 use AOC::Grid;
 use Test;
 
-my $NUM_TESTS := 1;
+my $NUM_TESTS := 24;
 plan $NUM_TESTS;
 
 # Call testing functions

@@ -1,8 +1,9 @@
 #!/usr/bin/env raku
 
-use lib $*PROGRAM.dirname;
+use lib $*PROGRAM.dirname ~ '/lib';
 use AOC::Util;
-#use AOC::SpatialUtil;
+#use AOC::Geometry;
+#use AOC::Grid;
 
 my $INPUT_PATH = '../input';
 my $INPUT_FILE = 'day<##>_test.txt';
