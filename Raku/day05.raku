@@ -12,15 +12,28 @@ my @input = read_grouped_input("$INPUT_PATH/$INPUT_FILE");
 
 say "Advent of Code 2022, Day 5: Supply Stacks";
 
-my @stacks = parse_stacks(@input[0]);
-my @commands = parse_commands(@input[1]);
-
-solve_part_one(@stacks, @commands);
+solve_part_one(@input);
 solve_part_two(@input);
 
 exit( 0 );
 
-sub solve_part_one(@stacks, @commands) {
+sub solve_part_one(@input) {
+	my @stacks = parse_stacks(@input[0]);
+	my @commands = parse_commands(@input[1]);
+
+	my $message = solve_part(stacks => @stacks, commands => @commands, is_cratemover_9001 => False);
+	say "Part One: the message is $message.";
+}
+
+sub solve_part_two(@input) {
+	my @stacks = parse_stacks(@input[0]);
+	my @commands = parse_commands(@input[1]);
+
+	my $message = solve_part(stacks => @stacks, commands => @commands, is_cratemover_9001 => True);
+	say "Part Two: the message is $message.";	
+}
+
+sub solve_part(:@stacks, :@commands, Bool :$is_cratemover_9001 --> Str) {
 	for @commands -> $cmd {
 		#say $cmd.Str;
 		my $from_idx = 0; my $to_idx = 0;
@@ -28,7 +41,7 @@ sub solve_part_one(@stacks, @commands) {
 			$from_idx = $i if @stacks[$i].id eq $cmd.from;
 			$to_idx = $i if @stacks[$i].id eq $cmd.to;
 		}
-		my @boxes = @stacks[$from_idx].remove($cmd.count);
+		my @boxes = @stacks[$from_idx].remove($cmd.count, $is_cratemover_9001);
 		@stacks[$to_idx].add(@boxes);
 		#for @stacks -> $stack { say $stack.Str; }
 	}
@@ -36,11 +49,7 @@ sub solve_part_one(@stacks, @commands) {
 	for @stacks -> $stack {
 		$message ~= $stack.top;
 	}
-	say "Part One: the message is $message.";
-}
-
-sub solve_part_two(@input) {
-	
+	return $message;
 }
 
 
@@ -48,10 +57,15 @@ class Stack {
 	has Str $.id;
 	has Str @.data;
 
-	method remove(Int $count --> Array) {
+	method remove(Int $count, Bool $keep_order --> Array) {
 		my @result = ();
 		for 1..$count -> $i {
-			@result.push(@.data.pop);
+			if $keep_order {
+				@result.unshift(@.data.pop);
+			}
+			else {
+				@result.push(@.data.pop);
+			}
 		}
 		return @result;
 	}
