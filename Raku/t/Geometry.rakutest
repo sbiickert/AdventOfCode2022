@@ -4,11 +4,12 @@ use AOC::Util;
 use AOC::Geometry;
 use Test;
 
-my $NUM_TESTS := 49;
+my $NUM_TESTS := 65;
 plan $NUM_TESTS;
 
 test_coord2d();
 test_pos2d();
+test_extent1d();
 test_extent2d();
 
 done-testing;
@@ -74,6 +75,41 @@ sub test_pos2d() {
 	my $moved = $bad.move_forward();
 	nok $bad eqv $moved or diag "Tested moving with a bad direction.";
 	ok $moved.coord eqv Coord.new(x=>0,y=>-1) or diag "Expected default direction to be N.";
+}
+
+
+sub test_extent1d() {
+	say "\nTesting Extent1D";
+	my @exts is default(Nil) = (
+		Extent1D.new(range => 0..10),
+		Extent1D.new(range => 4..2),
+		Extent1D.new(range => 4..10),
+		Extent1D.new(range => 5..8));
+	@exts.push(
+		@exts[1].intersect(@exts[3]),
+		@exts[1].intersect(@exts[2]),
+		@exts[1].union(@exts[3]),
+		Extent1D.new(range => 0..10));
+
+ 	ok @exts[0].size == 11, "Testing size" or diag "ext[0] wasn't the expected size.";
+ 	ok @exts[1].min == 2 && @exts[1].max == 4, "Testing min, max" or diag "ext[1] limits were not correct.";
+
+	ok @exts[0].contains(@exts[1]), "Testing large ext contains small ext" or diag "ext[0] does not contain ext[1]";
+	nok @exts[1].contains(@exts[0]), "Testing small ext !contains large ext" or diag "ext[1] does contains ext[0]";
+	ok @exts[0].overlaps(@exts[1]), "Testing ext overlaps ext" or diag "ext[0] does not overlap ext[1]";
+	ok @exts[1].overlaps(@exts[2]), "Testing ext overlaps ext at limit" or diag "ext[1] does not overlap ext[2]";
+	ok @exts[0].contains(@exts[2]), "Testing ext contains ext" or diag "ext[0] does not contain ext[2]";
+	nok @exts[1].overlaps(@exts[3]), "Testing disjoint overlap" or diag "ext[1] overlaps ext[3]";
+	ok @exts[0].contains(5), "Testing ext contains value" or diag "ext[0] does not contain 5";
+	nok @exts[0].contains(-1), "Testing ext !contains value" or diag "ext[0] contains -1";
+	nok @exts[0].contains(11), "Testing ext !contains value" or diag "ext[0] contains 11";
+	
+	ok @exts[4] ~~ Nil, "Testing ext is Nil" or diag "ext[4] is not Nil";
+	ok @exts[5].size == 1, "Testing size" or diag "ext[5] is the wrong size";
+	ok @exts[6].size == 7, "Testing size" or diag "ext[6] is the wrong size";
+	ok @exts[0] eqv @exts[7], "Testing equality" or diag "ext[0] and ext[7] are not equal";
+	nok @exts[0] eqv @exts[1], "Testing inequality" or diag "ext[0] and ext[1] are equal";
+
 }
 
 

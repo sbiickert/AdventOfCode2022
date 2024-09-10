@@ -174,6 +174,52 @@ class Position is export {
 	}
 }
 
+
+class Extent1D is export {
+	has Range $.range;
+
+	submethod TWEAK {
+		if $!range.min > $!range.max {
+			$!range = $!range.max..$!range.min;
+		}
+	}
+
+	method min(--> Int) { return $.range.min; }
+	method max(--> Int) { return $.range.max; }
+
+	method Str { '{min: ' ~ self.min ~ ' max: ' ~ self.max ~ '}' }
+	
+	multi infix:<eqv>(Extent1D $l, Extent1D $r) { $l.range eqv $r.range; }
+
+	method size(--> Int) { return $.range.minmax[1] - $.range.minmax[0] + 1; }
+
+	multi method contains(Extent1D $other --> Bool) {
+		return self.min <= $other.min && $other.max <= self.max;
+	}
+
+	multi method contains(Int $value --> Bool) {
+		return self.min <= $value && $value <= self.max;
+	}
+
+	method overlaps(Extent1D $other --> Bool) {
+		return !(self.intersect($other) ~~ Nil);
+	}
+
+	method union(Extent1D $other --> Extent1D) {
+		return Extent1D.new(range => min(self.min, $other.min)..max(self.max, $other.max));
+	}
+
+	method intersect(Extent1D $other --> Extent1D) {
+		my $bigmin = max(self.min, $other.min);
+		my $smallmax = min(self.max, $other.max);
+		if ($bigmin <= $smallmax) {
+			return Extent1D.new(range => $bigmin..$smallmax);
+		}
+		return Nil;
+	}
+}
+
+
 class Extent is export {
 	has Coord $.min;
 	has Coord $.max;
