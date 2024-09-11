@@ -5,7 +5,7 @@ use AOC::Util;
 #use AOC::Geometry;
 #use AOC::Grid;
 
-my $INPUT_PATH = '../input';
+my $INPUT_PATH = '../Input';
 my $INPUT_FILE = 'day<##>_test.txt';
 #my $INPUT_FILE = 'day<##>_challenge.txt';
 my @input = read_input("$INPUT_PATH/$INPUT_FILE");
