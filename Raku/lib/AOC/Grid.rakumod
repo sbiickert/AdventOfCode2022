@@ -141,4 +141,15 @@ class Grid is export {
 		
 		return $str;
 	}
+	
+	method load(@rows) {
+		for 0..@rows.end -> $r {
+			my @cols = @rows[$r].split('', :skip-empty);
+			for 0..@cols.end -> $c {
+				if @cols[$c] ne $.default {
+					self.set(Coord.from_ints($c, $r), @cols[$c]);
+				}
+			}
+		}
+	}
 }

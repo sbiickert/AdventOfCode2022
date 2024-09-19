@@ -45,7 +45,13 @@ enum AdjacencyRule is export <ROOK BISHOP QUEEN>;
 my %ADJACENCY_RULES = (ROOK    => ['N','E','S','W'],
 						BISHOP => ['NE','SE','SW','NW'],
 						QUEEN  => ['N','NE','E','SE','S','SW','W','NW']);
-						
+
+sub adjacent_dirs(AdjacencyRule $rule --> Array) is export {
+	my @arr = %ADJACENCY_RULES{$rule}.flat;
+	return @arr;
+}
+
+
 class Coord is export {
 	has Int $.x = 0;
 	has Int $.y = 0;
@@ -113,12 +119,16 @@ class Coord is export {
 		if (%ADJACENCY_RULES{$rule}:exists) {
 			my @dirs = %ADJACENCY_RULES{$rule}.flat;
 			for @dirs -> $dir {
-				@result.push(self.add(Coord.get_offset($dir)));
+				@result.push(self.offset($dir));
 			}
 		}
 		return @result;
 	}
 
+	method offset(Str $dir --> Coord) {
+		my $resolved_dir = resolve_offset_alias($dir);
+		return self.add(Coord.get_offset($resolved_dir));
+	}
 	
 	method delta(Coord $other --> Coord) {
 		Coord.new( x => $other.x - $.x, y => $other.y - $.y )
